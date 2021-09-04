@@ -24,7 +24,7 @@ Each utility is designed to be as flexible and barebones as possible so that the
 
 
 **Exposed functions:**
-- Tigger Slide (requires direction)
+- Trigger Slide (requires direction)
 - Reset (reset position and slider incase something breaks it and you need to programatically fix it.)
 
 **Exmaple Structure:**
