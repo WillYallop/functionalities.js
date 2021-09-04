@@ -5,19 +5,13 @@ Functionalities is a utility library for the frontend to help speed up developme
 Each utility is designed to be as flexible and barebones as possible so that they can fit into any projects easily, while giving you full control over the look and feel. 
 
 ## Current Utilities
-
 - Sliders
 - Form/Input Validation
 
 <br>
-<br>
 
 ## **Utility:** Sliders
-
 Write docs for the slider utility!
 
-<br>
-
 ## **Utility:** Form/Input Validation
-
 Write docs for the form/input validation utility!
