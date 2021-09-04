@@ -23,6 +23,25 @@ Each utility is designed to be as flexible and barebones as possible so that the
 - Tigger Slide (requires direction)
 - Reset (reset position and slider incase something breaks it and you need to programatically fix it.)
 
+**Exmaple Structure:**
+```html
+    <div id="slideId" class="slider">
+        <div class="slide-wrapper">
+
+            <div class="slide">
+                <p>Slide 1</p>
+            </div>
+            <div class="slide">
+                <p>Slide 2</p>
+            </div>
+            <div class="slide">
+                <p>Slide 3</p>
+            </div>
+
+        </div>
+    </div>
+```
+
 
 ## **Utility:** Form/Input Validation
 Write docs for the form/input validation utility!

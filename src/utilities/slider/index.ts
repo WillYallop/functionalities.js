@@ -1,31 +1,79 @@
-interface Config {
-    firstName: string;
-    lastName: string; 
-    age: number; 
-}
+// General
+import error from '../../shared/error';
+
+// Specific
+import { touchEventsInitiate, touchEventsDestroy } from './handler/touch-events';
 
 export default class Slider {
-    constructor(config?: Config) {
-        // Defines a function type 
-        // Any function set as this variable must match the bellow type
-        var functionTest: (a: number, b: number, callback: (a: string) => void ) => number;
-        functionTest = this.test;
-
-        functionTest(10, 20, (iAmAString) => {
-            console.log(iAmAString);
-        });
-
-
-
+    config: Config;
+    defaults: {
+        id: string,
+        perPage: 'auto' | number,
+        direction: ConfigDirection,
+        enableTouch: boolean,
+    };
+    adjustSlides;
+    touchEventsInitiate;
+    constructor(config: Config) {
+        this.defaults = {
+            id: 'sliderID',
+            perPage: 'auto',
+            direction: ConfigDirection.vertical,
+            enableTouch: true
+        }
+        this.config = { ...this.defaults, ...config };
+        // Init
+        this.initialise();
     } 
-    test(num: number, num2: number, callback) {
-        callback('tst');
-        return num + num2;
+    initialise() {
+        // Store the elements we'll need to interact with
+
+        // Adjust slides based on config.perPage so everything is translated and overflowing correctly
+
+        // Set events to handle interacting with the slider - mobile and mouse touch events
+        if(this.config.enableTouch) {
+            this.touchEventsInitiate = touchEventsInitiate.bind(this);
+            this.touchEventsInitiate();
+        }
     }
-    test2(num: number, num2: number) {
-        return `${num} + ${num2}`;
+    triggerSlide(direction: SlideDirectionType) {
+        // Right or Down slide
+        if(direction === SlideDirection.rightDown) {
+            console.log('Right or Down')
+
+            // If config.triggerCB
+            if(this.config.triggerCB != undefined) this.config.triggerCB('1. ');
+        }
+        // Left or Up slide
+        else if (direction === SlideDirection.leftUp) {
+            console.log('Left or Up');
+            
+            // If config.triggerCB
+            if(this.config.triggerCB != undefined) this.config.triggerCB('1. ');
+        }
+        else error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`) // ERROR
     }
-    test3(data: Car) {
-        
+    refresh() {
+
     }
-} 
+    destory() {
+
+        // For config.enableTouch
+        if(this.config.enableTouch) touchEventsDestroy();
+    }
+}
+
+// Type definitions
+
+enum ConfigDirection { vertical, horizontal };
+
+enum SlideDirection { rightDown = 'rightDown', leftUp = 'leftUp' };
+type SlideDirectionType = 'rightDown' | 'leftUp';
+
+interface Config {
+    id?: string,
+    perPage?: 'auto' | number,
+    direction?: ConfigDirection,
+    enableTouch?: boolean,
+    triggerCB?: (response: string) => void
+};
