@@ -30,10 +30,9 @@ interface Config {
 // Slider
 export default class Slider {
     config: Config;
-    defaults: Config;
     touchEventsInitiate;
     constructor(config: Config) {
-        this.defaults = {
+        this.config = {
             id: 'sliderID',
             perPage: 'auto',
             direction: ConfigDirection.horizontal,
@@ -45,9 +44,9 @@ export default class Slider {
                 slider: 'slider',
                 wrapper: 'slider-wrapper',
                 slide: 'slide'
-            }
+            },
+            ...config
         }
-        this.config = { ...this.defaults, ...config };
         // Init
         if(!this.verifyConfig()) this.initialise(); 
     } 
