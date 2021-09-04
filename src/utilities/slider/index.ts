@@ -9,7 +9,7 @@ export default class Slider {
     defaults: {
         id: string,
         perPage: 'auto' | number,
-        direction: ConfigDirection,
+        direction: ConfigDirectionType,
         enableTouch: boolean,
     };
     adjustSlides;
@@ -18,7 +18,7 @@ export default class Slider {
         this.defaults = {
             id: 'sliderID',
             perPage: 'auto',
-            direction: ConfigDirection.vertical,
+            direction: ConfigDirection.horizontal,
             enableTouch: true
         }
         this.config = { ...this.defaults, ...config };
@@ -65,7 +65,8 @@ export default class Slider {
 
 // Type definitions
 
-enum ConfigDirection { vertical, horizontal };
+enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
+type ConfigDirectionType = 'vertical' | 'horizontal';
 
 enum SlideDirection { rightDown = 'rightDown', leftUp = 'leftUp' };
 type SlideDirectionType = 'rightDown' | 'leftUp';
@@ -73,7 +74,14 @@ type SlideDirectionType = 'rightDown' | 'leftUp';
 interface Config {
     id?: string,
     perPage?: 'auto' | number,
-    direction?: ConfigDirection,
+    direction?: ConfigDirectionType,
     enableTouch?: boolean,
+    classes?: SliderClasses,
     triggerCB?: (response: string) => void
 };
+
+interface SliderClasses {
+    slider?: string,
+    wrapper?: string
+    slide?: string
+}
