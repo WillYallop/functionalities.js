@@ -1,4 +1,6 @@
-# Welcome to Functionalities
+<img src="./screenshot.jpeg" style="width: 100%; margin-bottom: 20px;">
+
+# Functionalities.js
 
 Functionalities is a utility library for the frontend to help speed up development. It aims to offer solutions for all the common components such as sliders, forms, accordions that you build in your frontend applications over and over again.
 
@@ -7,6 +9,8 @@ Each utility is designed to be as flexible and barebones as possible so that the
 ## Current Utilities
 - Sliders
 - Form/Input Validation
+- Accordions
+- Add class when in viewport (can use for animations)
 
 <br>
 
