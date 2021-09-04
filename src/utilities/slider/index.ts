@@ -19,29 +19,18 @@ interface Config {
     autoPlay?: boolean,
     speed?: number,
     enableTouch?: boolean,
-    classes?: SliderClasses,
+    classes?: {
+        slider?: string,
+        wrapper?: string
+        slide?: string
+    },
     triggerCB?: (response: string) => void
-};
-
-interface SliderClasses {
-    slider?: string,
-    wrapper?: string
-    slide?: string
 };
 
 // Slider
 export default class Slider {
     config: Config;
-    defaults: {
-        id: string,
-        perPage: 'auto' | number,
-        direction: ConfigDirectionType,
-        loop?: boolean,
-        autoPlay?: boolean,
-        speed?: number,
-        enableTouch: boolean,
-        classes: SliderClasses,
-    };
+    defaults: Config;
     touchEventsInitiate;
     constructor(config: Config) {
         this.defaults = {
@@ -113,7 +102,7 @@ export default class Slider {
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean".`), hasError = true;
         // config.speed
-        if(typeof this.config.speed != 'boolean') error(`Typeof "${typeof this.config.speed }" is not allow for "speed". It must be type "boolean".`), hasError = true;
+        if(typeof this.config.speed != 'number') error(`Typeof "${typeof this.config.speed }" is not allow for "speed". It must be type "number".`), hasError = true;
         // config.enableTouch
         if(typeof this.config.enableTouch != 'boolean') error(`Typeof "${typeof this.config.enableTouch }" is not allow for "enableTouch". It must be type "boolean".`), hasError = true;
         // config.classes
