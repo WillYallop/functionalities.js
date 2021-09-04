@@ -11,7 +11,18 @@ Each utility is designed to be as flexible and barebones as possible so that the
 <br>
 
 ## **Utility:** Sliders
-Write docs for the slider utility!
+
+**Config:**
+- Slides per page (auto - Int)
+- Slide direction (Horizontal/Vertical)
+- Touch support (true/false)
+- Trigger Slide callback
+
+
+**Exposed functions:**
+- Tigger Slide (requires direction)
+- Reset (reset position and slider incase something breaks it and you need to programatically fix it.)
+
 
 ## **Utility:** Form/Input Validation
 Write docs for the form/input validation utility!

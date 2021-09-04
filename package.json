@@ -4,6 +4,9 @@
   "description": "A simple slider library to speed up dev.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "files":  [
+    "dist"
+  ],
   "scripts": {
     "build": "webpack --mode=production --node-env=production",
     "dev": "webpack --mode=development --watch"
