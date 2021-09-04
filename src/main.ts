@@ -1,2 +1,2 @@
-export { default as Slider } from './modules/slider';
-export { default as FormValidation } from './modules/form-validation';
+export { default as Slider } from './utilities/slider';
+export { default as FormValidation } from './utilities/form-validation';
