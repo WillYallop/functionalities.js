@@ -1,1 +1,1 @@
-type MovementType = () => boolean;
+type MovementType = () => string;

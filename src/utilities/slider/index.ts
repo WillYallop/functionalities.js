@@ -28,7 +28,11 @@ interface Config {
         wrapper?: string,
         slide?: string
     },
-    triggerCB?: (response: boolean) => void
+    triggerCB?: (response: {
+        direction: string,
+        currentSlide: number,
+        totalSlides: number
+    }) => void
 };
 
 // Slider
@@ -117,11 +121,14 @@ export default class Slider {
             error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
             return;
         }
-
         const moveDirectionFunc: MovementType = moveDirection.bind(this);
-        const moved = moveDirectionFunc();
+        const directionMoved = moveDirectionFunc();
         // If config.triggerCB
-        if(this.config.triggerCB != undefined) this.config.triggerCB(moved);
+        if(this.config.triggerCB != undefined) this.config.triggerCB({
+            direction: directionMoved,
+            currentSlide: this.activeSlide,
+            totalSlides: this.slidesElementsArray.length
+        });
     }
     // Stop the autoPlay slider
     pause() {
