@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy } from './handler/touch-events';
-import { moveLeft, moveRight, moveUp, moveDown } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown } from './handler/movement';
 
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
@@ -104,15 +104,9 @@ export default class Slider {
     triggerSlide(direction: SlideDirectionType) {
         let moveDirection;
         // Right or Down slide
-        if(direction === SlideDirection.rightDown) {
-            if(this.config.direction === ConfigDirection.horizontal) moveDirection = moveRight;
-            if(this.config.direction === ConfigDirection.vertical) moveDirection = moveDown;
-        }
+        if(direction === SlideDirection.rightDown) moveDirection = moveRightOrDown;
         // Left or Up slide
-        else if (direction === SlideDirection.leftUp) {
-            if(this.config.direction === ConfigDirection.horizontal) moveDirection = moveLeft;
-            if(this.config.direction === ConfigDirection.vertical) moveDirection = moveUp;
-        }
+        else if (direction === SlideDirection.leftUp) moveDirection = moveLeftOrUp;
         // ERROR
         else {
             error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
@@ -136,10 +130,16 @@ export default class Slider {
         if(this.config.enableTouch) touchEventsDestroy();
     }
 
-    applyWrapperOffset() {
+    // Apply wrapper offset for x & y
+    applyWrapperOffsetX() {
         // Set current active slide in frame
         const offsetLeft = -Math.abs(this.slidesElementsArray[this.activeSlide].offsetLeft);
         applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+    }
+    applyWrapperOffsetY() {
+        // Set current active slide in frame
+        const offsetTop = -Math.abs(this.slidesElementsArray[this.activeSlide].offsetTop);
+        applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
     }
 
     // window resize event
@@ -214,6 +214,8 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'minWidth', `${slideMinWidth}px`);
             applyStyle(this.slidesElementsArray[i], 'maxWidth', `${slideMinWidth}px`);
         }
+        // Set current active slide in frame
+        this.applyWrapperOffsetX();
     }
     // Vertical
     else if(this.config.direction === ConfigDirection.vertical) {
@@ -228,7 +230,7 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'minHeight', `${slideMinHeight}px`);
             applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
+        // Set current active slide in frame
+        this.applyWrapperOffsetY();
     }
-    // Set current active slide in frame
-    this.applyWrapperOffset();
 }

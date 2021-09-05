@@ -1,30 +1,19 @@
-import applyStyle from '../../../shared/apply-style';
-
-
-function moveLeft() {
+function moveLeftOrUp() {
     if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - this.config.perPage;
     else this.activeSlide--;
-    // Get the offsetLeft from this active element and set the transform translate offser of the wrapper to this value 
-    this.applyWrapperOffset();
+    
+    if(this.config.direction === 'horizontal') this.applyWrapperOffsetX();
+    else this.applyWrapperOffsetY();
     return true;
 }
 
-function  moveRight() {
+function  moveRightOrDown() {
     if(this.activeSlide + 1 >= this.slidesElementsArray.length - (this.config.perPage - 1)) this.activeSlide = 0;
     else this.activeSlide++;
-    // Get the offsetLeft from this active element and set the transform translate offser of the wrapper to this value 
-    this.applyWrapperOffset();
+
+    if(this.config.direction === 'horizontal') this.applyWrapperOffsetX();
+    else this.applyWrapperOffsetY();
     return true;
 }
 
-function moveUp() {
-
-    return true;
-}
-
-function moveDown() {
-
-    return true;
-}
-
-export { moveLeft, moveRight, moveUp, moveDown };
+export { moveLeftOrUp, moveRightOrDown };
