@@ -2,17 +2,14 @@ function moveLeftOrUp() {
     let lingerBellow: number = this.config.perPage - 1;
     let linger: boolean;
     if(this.activeSlide + lingerBellow - 1 < 0) {
-        console.log('last item')
         this.activeSlide = this.slidesElementsArray.length - this.config.perPage;
         linger = false;
     }
     else if(this.activeSlide + lingerBellow > lingerBellow) {
-        console.log('go down');
         this.activeSlide--;
         linger = false;
     } 
     else {
-        console.log('linger')
         this.activeSlide--;
         linger = true;
     }
