@@ -19,6 +19,7 @@ interface Config {
     perPage?: 'auto' | number,
     direction?: ConfigDirectionType,
     autoPlay?: boolean,
+    slideDirection?: SlideDirectionType,
     gap?: number,
     speed?: number,
     enableTouch?: boolean,
@@ -37,6 +38,7 @@ export default class Slider {
     touchEventsInitiate;
     adjustSlidesHandler: () => void;
     activeSlide: number;
+    sliderLoop;
     // Elements
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
@@ -47,8 +49,9 @@ export default class Slider {
             perPage: 2,
             direction: ConfigDirection.horizontal,
             autoPlay: false,
+            slideDirection: SlideDirection.rightDown,
             gap: 20,
-            speed: 1000,
+            speed: 2000,
             enableTouch: true,
             classes: {
                 slider: 'slider',
@@ -91,15 +94,15 @@ export default class Slider {
             this.touchEventsInitiate();
         }
 
-        // Resize event creation
-        this.resizeEventHandler();
-
-        for(var i = 0; i < this.slidesElementsArray.length; i++) {
-            console.dir(this.slidesElementsArray[i]);
+        // Start slider loop
+        if(this.config.autoPlay) {
+            this.sliderLoop = setInterval(() => {
+                this.triggerSlide(this.config.slideDirection);
+            }, this.config.speed);
         }
 
-        // TEMP
-        // console.log(this);
+        // Resize event creation
+        this.resizeEventHandler();
     }
     triggerSlide(direction: SlideDirectionType) {
         let moveDirection;
@@ -161,6 +164,12 @@ export default class Slider {
         else if(this.config.direction != ConfigDirection.vertical && this.config.direction != ConfigDirection.horizontal) error(`"direction" can only be equal to ${ConfigDirection.vertical} or ${ConfigDirection.horizontal}!`), hasError = true;
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean"!`), hasError = true;
+       
+        // config.slideDirection
+        if(typeof this.config.slideDirection != 'string') error(`Typeof "${typeof this.config.slideDirection }" is not allow for "slideDirection". It must be type "string"!`), hasError = true;
+        else if(this.config.slideDirection != SlideDirection.rightDown && this.config.slideDirection != SlideDirection.leftUp) error(`"slideDirection" can only be equal to ${SlideDirection.rightDown} or ${SlideDirection.leftUp}!`), hasError = true;
+       
+       
         // config.speed
         if(typeof this.config.speed != 'number') error(`Typeof "${typeof this.config.speed }" is not allow for "speed". It must be type "number"!`), hasError = true;
         // config.gap
