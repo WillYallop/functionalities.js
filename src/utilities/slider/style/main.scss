@@ -1,0 +1,19 @@
+.functionalities-slider {
+    width: 100%;
+    border: 1px solid black; // temp
+    position: relative;
+    * {
+        box-sizing: border-box;
+    }
+    .functionalities-wrapper {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: flex;
+        .functionalities-slide {
+            // total gap coloums / visible slides
+            // min-width: calc(25% - 15px);
+            border: 1px solid red; // temp
+        }
+    }
+}
