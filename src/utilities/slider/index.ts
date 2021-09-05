@@ -39,6 +39,7 @@ export default class Slider {
     adjustSlidesHandler: () => void;
     activeSlide: number;
     sliderLoop;
+    autoPlayPaused: boolean;
     // Elements
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
@@ -104,6 +105,7 @@ export default class Slider {
         // Resize event creation
         this.resizeEventHandler();
     }
+    // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
         let moveDirection;
         // Right or Down slide
@@ -121,9 +123,74 @@ export default class Slider {
         // If config.triggerCB
         if(this.config.triggerCB != undefined) this.config.triggerCB(moved);
     }
+    // Stop the autoPlay slider
+    pause() {
+        return new Promise((resolve, reject) => {
+            if(this.config.autoPlay) {
+                if(!this.autoPlayPaused) {
+                    clearInterval(this.sliderLoop);
+                    this.autoPlayPaused = true;
+                    resolve({
+                        success: true,
+                        msg: 'Successfully paused the slider!'
+                    });
+                }
+                else {
+                    let msg = 'The slider is already paused!'
+                    error(msg);
+                    reject({
+                        success: false,
+                        msg: msg
+                    });
+                };
+            }
+            else {
+                let msg = 'You must have config.autoPlay set to "true" to be able to use this function!';
+                error(msg);
+                reject({
+                    success: false,
+                    msg: msg
+                });
+            }
+        });
+    }
+    // Start the autoPlay slider
+    start() {
+        return new Promise((resolve, reject) => { 
+            if(this.config.autoPlay) {
+                if(this.autoPlayPaused) {
+                    this.sliderLoop = setInterval(() => {
+                        this.triggerSlide(this.config.slideDirection);
+                    }, this.config.speed);
+                    this.autoPlayPaused = false;
+                    resolve({
+                        success: true,
+                        msg: 'Successfully started the slider!'
+                    });
+                }
+                else {
+                    let msg = 'You can only start autoPlay if you have paused it before hand!';
+                    error(msg);
+                    reject({
+                        success: false,
+                        msg: msg
+                    });
+                };
+            } else {
+                let msg = 'You must have config.autoPlay set to "true" to be able to use this function!';
+                error(msg);
+                reject({
+                    success: false,
+                    msg: msg
+                });
+            };
+        });
+    }
+    // Reset the the slider
     refresh() {
 
     }
+    // Destroy all event listeners
     destory() {
         // Destroy resize
         if(this.config.perPage != 'auto') {
