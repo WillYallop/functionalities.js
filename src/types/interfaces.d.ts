@@ -1,7 +1,7 @@
 interface ApplyBasicStyles {
     slider: HTMLElement,
     wrapper: HTMLElement,
-    slides: NodeListOf<HTMLElement>
+    slides: any
 }
 
 interface AdjustSlides {
@@ -10,5 +10,5 @@ interface AdjustSlides {
     gap: number,
     slider: HTMLElement,
     wrapper: HTMLElement,
-    slides: NodeListOf<HTMLElement>
+    slides: any
 }

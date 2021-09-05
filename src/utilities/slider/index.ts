@@ -18,7 +18,6 @@ interface Config {
     id?: string,
     perPage?: 'auto' | number,
     direction?: ConfigDirectionType,
-    loop?: boolean,
     autoPlay?: boolean,
     gap?: number,
     speed?: number,
@@ -37,16 +36,16 @@ export default class Slider {
     // Functions
     touchEventsInitiate;
     adjustSlidesHandler: () => void;
+    activeSlide: number;
     // Elements
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
-    slidesElementsArray: NodeListOf<HTMLElement>;
+    slidesElementsArray: any; 
     constructor(config: Config) {
         this.config = {
             id: 'sliderID',
             perPage: 2,
             direction: ConfigDirection.horizontal,
-            loop: true,
             autoPlay: false,
             gap: 20,
             speed: 1000,
@@ -61,7 +60,14 @@ export default class Slider {
         // Store the elements we'll need to interact with
         this.sliderElement = document.getElementById(this.config.id);
         this.wrapperElement = this.sliderElement.querySelector(`.${this.config.classes.wrapper}`);
-        if(this.wrapperElement) this.slidesElementsArray = this.wrapperElement.querySelectorAll(`.${this.config.classes.slide}`);
+        if(this.wrapperElement) {
+            this.slidesElementsArray = [];
+            let slides = this.wrapperElement.querySelectorAll(`.${this.config.classes.slide}`);
+            for(let i = 0; i < slides.length; i++) {
+                this.slidesElementsArray.push(slides[i]);
+            }
+        };
+        this.activeSlide = 0;
         // Init
         if(!this.verify()) this.initialise(); 
     } 
@@ -88,11 +94,15 @@ export default class Slider {
         // Resize event creation
         this.resizeEventHandler();
 
+        for(var i = 0; i < this.slidesElementsArray.length; i++) {
+            console.dir(this.slidesElementsArray[i]);
+        }
+
         // TEMP
         // console.log(this);
     }
     triggerSlide(direction: SlideDirectionType) {
-        let moveDirection: MovementType;
+        let moveDirection;
         // Right or Down slide
         if(direction === SlideDirection.rightDown) {
             if(this.config.direction === ConfigDirection.horizontal) moveDirection = moveRight;
@@ -109,7 +119,8 @@ export default class Slider {
             return;
         }
 
-        const moved = moveDirection();
+        const moveDirectionFunc: MovementType = moveDirection.bind(this);
+        const moved = moveDirectionFunc();
         // If config.triggerCB
         if(this.config.triggerCB != undefined) this.config.triggerCB(moved);
     }
@@ -123,6 +134,12 @@ export default class Slider {
         }
         // For config.enableTouch
         if(this.config.enableTouch) touchEventsDestroy();
+    }
+
+    applyWrapperOffset() {
+        // Set current active slide in frame
+        const offsetLeft = -Math.abs(this.slidesElementsArray[this.activeSlide].offsetLeft);
+        applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
     }
 
     // window resize event
@@ -142,8 +159,6 @@ export default class Slider {
         // config.direction
         if(typeof this.config.direction != 'string') error(`Typeof "${typeof this.config.direction }" is not allow for "direction". It must be type "string"!`), hasError = true;
         else if(this.config.direction != ConfigDirection.vertical && this.config.direction != ConfigDirection.horizontal) error(`"direction" can only be equal to ${ConfigDirection.vertical} or ${ConfigDirection.horizontal}!`), hasError = true;
-        // config.loop
-        if(typeof this.config.loop != 'boolean') error(`Typeof "${typeof this.config.loop }" is not allow for "loop". It must be type "boolean"!`), hasError = true;
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean"!`), hasError = true;
         // config.speed
@@ -214,4 +229,6 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
     }
+    // Set current active slide in frame
+    this.applyWrapperOffset();
 }
