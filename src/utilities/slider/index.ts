@@ -33,7 +33,9 @@ interface Config {
 // Slider
 export default class Slider {
     config: Config;
+    // Functions
     touchEventsInitiate;
+    adjustSlidesHandler: () => void;
     // Elements
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
@@ -72,22 +74,18 @@ export default class Slider {
 
         // Adjust slides based on config.perPage so everything is translated and overflowing correctly
         if(this.config.perPage != 'auto') {
-            adjustSlides({
-                perPage: this.config.perPage,
-                direction: this.config.direction,
-                gap: this.config.gap,
-                slider: this.sliderElement,
-                wrapper: this.wrapperElement,
-                slides: this.slidesElementsArray
-            })
+            this.adjustSlidesHandler = adjustSlides.bind(this);
+            this.adjustSlidesHandler();
         }
-
 
         // Set events to handle interacting with the slider - mobile and mouse touch events
         if(this.config.enableTouch) {
             this.touchEventsInitiate = touchEventsInitiate.bind(this);
             this.touchEventsInitiate();
         }
+
+        // Resize event creation
+        this.resizeEventHandler();
 
 
         // TEMP
@@ -114,10 +112,21 @@ export default class Slider {
 
     }
     destory() {
+        // Destroy resize
+        if(this.config.perPage != 'auto') {
+            window.removeEventListener('resize', this.adjustSlidesHandler);
+        }
         // For config.enableTouch
         if(this.config.enableTouch) touchEventsDestroy();
     }
 
+    // window resize event
+    resizeEventHandler() {
+        // Readjust slide
+        if(this.config.perPage != 'auto') {
+            window.addEventListener('resize', this.adjustSlidesHandler);
+        }
+    }
     // Verify values for non typescript implementation
     verify():boolean {
         let hasError:boolean = false;
@@ -166,37 +175,37 @@ const applyBasicStyles = (elements: ApplyBasicStyles) => {
 }
 
 // Adjust slides based on config.perPage so everything is translated and overflowing correctly
-const adjustSlides = (data: AdjustSlides) => {
+function adjustSlides() {
     // Set fixed defualt height for the slider 
-    if(data.direction === ConfigDirection.vertical) applyStyle(data.slider, 'height', '600px');
+    if(this.config.direction === ConfigDirection.vertical) applyStyle(this.sliderElement, 'height', '600px');
     // Set constants
-    const [sliderWidth, sliderHeight] = [data.wrapper.offsetWidth, data.wrapper.offsetHeight];
-    const toalGapColumnsSize = (data.perPage - 1) * data.gap;
-    const gapAdjusted = data.slides.length > 1 ? toalGapColumnsSize / data.perPage : 0;
+    const [sliderWidth, sliderHeight] = [this.wrapperElement.offsetWidth, this.wrapperElement.offsetHeight];
+    const toalGapColumnsSize = (this.config.perPage - 1) * this.config.gap;
+    const gapAdjusted = this.slidesElementsArray.length > 1 ? toalGapColumnsSize / this.config.perPage : 0;
     // Horizonal
-    if(data.direction === ConfigDirection.horizontal) {
+    if(this.config.direction === ConfigDirection.horizontal) {
         // Set wrapper gap
-        applyStyle(data.wrapper, 'gap', `0 ${data.gap}px`);
+        applyStyle(this.wrapperElement, 'gap', `0 ${this.config.gap}px`);
         // Work out slide width
-        let slideMinWidth = (sliderWidth / data.perPage) - gapAdjusted;
-        for(let i = 0; i < data.slides.length; i++) {
-            applyStyle(data.slides[i], 'width', `${slideMinWidth}px`);
-            applyStyle(data.slides[i], 'minWidth', `${slideMinWidth}px`);
-            applyStyle(data.slides[i], 'maxWidth', `${slideMinWidth}px`);
+        let slideMinWidth = (sliderWidth / this.config.perPage) - gapAdjusted;
+        for(let i = 0; i < this.slidesElementsArray.length; i++) {
+            applyStyle(this.slidesElementsArray[i], 'width', `${slideMinWidth}px`);
+            applyStyle(this.slidesElementsArray[i], 'minWidth', `${slideMinWidth}px`);
+            applyStyle(this.slidesElementsArray[i], 'maxWidth', `${slideMinWidth}px`);
         }
     }
     // Vertical
-    else if(data.direction === ConfigDirection.vertical) {
+    else if(this.config.direction === ConfigDirection.vertical) {
         // Set wrapper gap
-        applyStyle(data.wrapper, 'gap', `${data.gap}px 0`);
-        applyStyle(data.wrapper, 'flexDirection', `column`);
+        applyStyle(this.wrapperElement, 'gap', `${this.config.gap}px 0`);
+        applyStyle(this.wrapperElement, 'flexDirection', `column`);
         // Work out slide height
-        let slideMinHeight = (sliderHeight / data.perPage) - gapAdjusted;
-        for(let i = 0; i < data.slides.length; i++) {
-            applyStyle(data.slides[i], 'width', `100%`);
-            applyStyle(data.slides[i], 'height', `${slideMinHeight}px`);
-            applyStyle(data.slides[i], 'minHeight', `${slideMinHeight}px`);
-            applyStyle(data.slides[i], 'maxHeight', `${slideMinHeight}px`);
+        let slideMinHeight = (sliderHeight / this.config.perPage) - gapAdjusted;
+        for(let i = 0; i < this.slidesElementsArray.length; i++) {
+            applyStyle(this.slidesElementsArray[i], 'width', `100%`);
+            applyStyle(this.slidesElementsArray[i], 'height', `${slideMinHeight}px`);
+            applyStyle(this.slidesElementsArray[i], 'minHeight', `${slideMinHeight}px`);
+            applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
     }
 }
