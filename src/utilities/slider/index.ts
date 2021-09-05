@@ -5,6 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy } from './handler/touch-events';
+import { moveLeft, moveRight, moveUp, moveDown } from './handler/movement';
 
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
@@ -27,7 +28,7 @@ interface Config {
         wrapper?: string,
         slide?: string
     },
-    triggerCB?: (response: string) => void
+    triggerCB?: (response: boolean) => void
 };
 
 // Slider
@@ -87,26 +88,30 @@ export default class Slider {
         // Resize event creation
         this.resizeEventHandler();
 
-
         // TEMP
         // console.log(this);
     }
     triggerSlide(direction: SlideDirectionType) {
+        let moveDirection: MovementType;
         // Right or Down slide
         if(direction === SlideDirection.rightDown) {
-            console.log('Right or Down')
-
-            // If config.triggerCB
-            if(this.config.triggerCB != undefined) this.config.triggerCB('1. ');
+            if(this.config.direction === ConfigDirection.horizontal) moveDirection = moveRight;
+            if(this.config.direction === ConfigDirection.vertical) moveDirection = moveDown;
         }
         // Left or Up slide
         else if (direction === SlideDirection.leftUp) {
-            console.log('Left or Up');
-            
-            // If config.triggerCB
-            if(this.config.triggerCB != undefined) this.config.triggerCB('1. ');
+            if(this.config.direction === ConfigDirection.horizontal) moveDirection = moveLeft;
+            if(this.config.direction === ConfigDirection.vertical) moveDirection = moveUp;
         }
-        else error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`) // ERROR
+        // ERROR
+        else {
+            error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
+            return;
+        }
+
+        const moved = moveDirection();
+        // If config.triggerCB
+        if(this.config.triggerCB != undefined) this.config.triggerCB(moved);
     }
     refresh() {
 
@@ -170,6 +175,7 @@ const applyBasicStyles = (elements: ApplyBasicStyles) => {
     elements.slider.classList.add('functionalities-slider');
     elements.wrapper.classList.add('functionalities-wrapper');
     for(let i = 0; i < elements.slides.length; i++) {
+        elements.slides[i].setAttribute('og-position', `${i}`);
         elements.slides[i].classList.add('functionalities-slide');
     }
 }
