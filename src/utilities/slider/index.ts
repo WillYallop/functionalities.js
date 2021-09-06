@@ -26,7 +26,8 @@ interface Config {
     classes?: {
         slider?: string,
         wrapper?: string,
-        slide?: string
+        slide?: string,
+        active?: string
     },
     triggerCB?: (response: {
         direction: string,
@@ -61,7 +62,8 @@ export default class Slider {
             classes: {
                 slider: 'slider',
                 wrapper: 'slider-wrapper',
-                slide: 'slide'
+                slide: 'slide',
+                active: 'active'
             },
             ...config
         }
@@ -85,7 +87,8 @@ export default class Slider {
             slider: this.sliderElement,
             wrapper: this.wrapperElement,
             slides: this.slidesElementsArray
-        })
+        });
+        this.slidesElementsArray[this.activeSlide].classList.add(this.config.classes.active);
 
         // Adjust slides based on config.perPage so everything is translated and overflowing correctly
         if(this.config.perPage != 'auto') {
@@ -129,6 +132,12 @@ export default class Slider {
             currentSlide: this.activeSlide,
             totalSlides: this.slidesElementsArray.length
         });
+        // Set active
+        for(let i = 0; i < this.slidesElementsArray.length; i++) {
+            let slide = this.slidesElementsArray[i];
+            if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
+        }
+        this.slidesElementsArray[this.activeSlide].classList.add(this.config.classes.active);
     }
     // Stop the autoPlay slider
     pause() {
@@ -254,6 +263,7 @@ export default class Slider {
         if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
+        if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
         // config.triggerCB
         if(typeof this.config.triggerCB != 'function') error(`Typeof "${typeof this.config.triggerCB }" is not allow for "triggerCB". It must be type "function"!`), hasError = true;
 

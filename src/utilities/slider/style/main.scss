@@ -16,6 +16,9 @@
             // total gap coloums / visible slides
             // min-width: calc(25% - 15px);
             border: 1px solid red; // temp
+            &.active {
+                border: 1px solid green;
+            }
         }
     }
 }
