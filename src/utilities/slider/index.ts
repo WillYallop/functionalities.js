@@ -45,6 +45,7 @@ export default class Slider {
     activeSlide: number;
     sliderLoop;
     autoPlayPaused: boolean;
+    pauseAutoplay: boolean;
     // Elements
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
@@ -99,13 +100,19 @@ export default class Slider {
         // Set events to handle interacting with the slider - mobile and mouse touch events
         if(this.config.enableTouch) {
             this.touchEventsInitiate = touchEventsInitiate.bind(this);
-            this.touchEventsInitiate();
+            this.touchEventsInitiate((direction) => {
+                if(direction === 'leftUp' && this.activeSlide === 0) {
+                    return;
+                }
+                this.triggerSlide(direction);
+                if(this.config.autoPlay) this.pauseAutoplay = true, setTimeout(() => {this.pauseAutoplay = false}, 3000);
+            });
         }
 
         // Start slider loop
         if(this.config.autoPlay) {
             this.sliderLoop = setInterval(() => {
-                this.triggerSlide(this.config.slideDirection);
+                if(!this.pauseAutoplay) this.triggerSlide(this.config.slideDirection);
             }, this.config.speed);
         }
 
@@ -176,7 +183,7 @@ export default class Slider {
             if(this.config.autoPlay) {
                 if(this.autoPlayPaused) {
                     this.sliderLoop = setInterval(() => {
-                        this.triggerSlide(this.config.slideDirection);
+                        if(!this.pauseAutoplay) this.triggerSlide(this.config.slideDirection);
                     }, this.config.speed);
                     this.autoPlayPaused = false;
                     resolve({
