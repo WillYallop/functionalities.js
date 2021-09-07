@@ -44,6 +44,7 @@ export default class Slider {
     adjustSlidesHandler: () => void;
     activeSlide: number;
     sliderLoop;
+    restartAutoPlayTimeout;
     autoPlayPaused: boolean;
     pauseAutoplay: boolean;
     // Elements
@@ -102,7 +103,11 @@ export default class Slider {
             this.touchEventsInitiate = touchEventsInitiate.bind(this);
             this.touchEventsInitiate((direction) => {
                 this.triggerSlide(direction);
-                if(this.config.autoPlay) this.pauseAutoplay = true, setTimeout(() => {this.pauseAutoplay = false}, 3000);
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
             });
         }
 
