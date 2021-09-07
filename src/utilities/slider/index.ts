@@ -22,7 +22,11 @@ interface Config {
     slideDirection?: SlideDirectionType,
     gap?: number,
     speed?: number,
-    enableTouch?: boolean,
+    controls?: {
+        touch?: boolean,
+        arrows?: boolean,
+        wheel?: boolean
+    },
     classes?: {
         slider?: string,
         wrapper?: string,
@@ -60,7 +64,11 @@ export default class Slider {
             slideDirection: SlideDirection.rightDown,
             gap: 20,
             speed: 2000,
-            enableTouch: true,
+            controls: {
+                touch: true,
+                arrows: true,
+                wheel: true
+            },
             classes: {
                 slider: 'slider',
                 wrapper: 'slider-wrapper',
@@ -99,17 +107,7 @@ export default class Slider {
         }
 
         // Set events to handle interacting with the slider - mobile and mouse touch events
-        if(this.config.enableTouch) {
-            this.touchEventsInitiate = touchEventsInitiate.bind(this);
-            this.touchEventsInitiate((direction) => {
-                this.triggerSlide(direction);
-                if(this.config.autoPlay) {
-                    this.pauseAutoplay = true;
-                    clearTimeout(this.restartAutoPlayTimeout);
-                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
-                }
-            });
-        }
+        this.eventsController();
 
         // Start slider loop
         if(this.config.autoPlay) {
@@ -120,6 +118,21 @@ export default class Slider {
 
         // Resize event creation
         this.resizeEventHandler();
+    }
+    eventsController() {
+        // Touch events - mobile and mouse   
+        if(this.config.controls.touch) {
+            this.touchEventsInitiate = touchEventsInitiate.bind(this);
+            this.touchEventsInitiate((direction) => {
+                this.triggerSlide(direction);
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
+            });
+        }
+        // Keyboard events
     }
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
@@ -222,7 +235,7 @@ export default class Slider {
             window.removeEventListener('resize', this.adjustSlidesHandler);
         }
         // For config.enableTouch
-        if(this.config.enableTouch) touchEventsDestroy();
+        if(this.config.controls.touch) touchEventsDestroy();
     }
 
     // Apply wrapper offset for x & y
@@ -256,26 +269,30 @@ export default class Slider {
         else if(this.config.direction != ConfigDirection.vertical && this.config.direction != ConfigDirection.horizontal) error(`"direction" can only be equal to ${ConfigDirection.vertical} or ${ConfigDirection.horizontal}!`), hasError = true;
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean"!`), hasError = true;
-       
         // config.slideDirection
         if(typeof this.config.slideDirection != 'string') error(`Typeof "${typeof this.config.slideDirection }" is not allow for "slideDirection". It must be type "string"!`), hasError = true;
         else if(this.config.slideDirection != SlideDirection.rightDown && this.config.slideDirection != SlideDirection.leftUp) error(`"slideDirection" can only be equal to ${SlideDirection.rightDown} or ${SlideDirection.leftUp}!`), hasError = true;
-       
-       
         // config.speed
         if(typeof this.config.speed != 'number') error(`Typeof "${typeof this.config.speed }" is not allow for "speed". It must be type "number"!`), hasError = true;
         // config.gap
         if(typeof this.config.gap != 'number') error(`Typeof "${typeof this.config.gap }" is not allow for "gap". It must be type "number"!`), hasError = true;
-        // config.enableTouch
-        if(typeof this.config.enableTouch != 'boolean') error(`Typeof "${typeof this.config.enableTouch }" is not allow for "enableTouch". It must be type "boolean"!`), hasError = true;
+        // config.controls
+        if(!this.config.controls.touch && !this.config.controls.arrows && !this.config.controls.wheel) error(`You are passing an empty "controls" object! This must have at least one parameter to be valid!`), hasError = true;
+        else {
+            if(typeof this.config.controls.touch != 'boolean') error(`Typeof "${typeof this.config.controls.touch }" is not allow for "controls.touch". It must be type "boolean"!`), hasError = true;
+            if(typeof this.config.controls.arrows != 'boolean') error(`Typeof "${typeof this.config.controls.arrows }" is not allow for "controls.arrows". It must be type "boolean"!`), hasError = true;
+            if(typeof this.config.controls.wheel != 'boolean') error(`Typeof "${typeof this.config.controls.wheel }" is not allow for "controls.wheel". It must be type "boolean"!`), hasError = true;
+        }
         // config.classes
-        if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
-        if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
-        if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
-        if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
+        if(!this.config.classes.slider && !this.config.classes.wrapper && !this.config.classes.slide && !this.config.classes.active) error(`You are passing an empty "classes" object! This must have at least one parameter to be valid!!`), hasError = true;
+        else {
+            if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
+            if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
+            if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
+            if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
+        }
         // config.triggerCB
         if(typeof this.config.triggerCB != 'function') error(`Typeof "${typeof this.config.triggerCB }" is not allow for "triggerCB". It must be type "function"!`), hasError = true;
-
         // Verify Elements
         if(!this.sliderElement) error(`Cannot find slider element of ID: "${this.config.id}"!`), hasError = true;
         if(!this.wrapperElement) error(`Cannot find slider wrapper element of Class: "${this.config.classes.wrapper}"!`), hasError = true;
