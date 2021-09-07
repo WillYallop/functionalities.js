@@ -27,7 +27,6 @@ const move = (event: object, x: number, y: number, cb: (direction: SlideDirectio
 };
 const up = () => lock = false;
 
-
 // External
 export function touchEventsInitiate(triggerSlideCb: (direction: SlideDirectionType) => {}) {
     // Mouse and touch down/start

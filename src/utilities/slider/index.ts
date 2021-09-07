@@ -4,7 +4,7 @@ import applyStyle from '../../shared/apply-style';
 
 // Specific
 import './style/main.scss';
-import { touchEventsInitiate, touchEventsDestroy } from './handler/touch-events';
+import { touchEventsInitiate, touchEventsDestroy } from './handler/control-events';
 import { moveLeftOrUp, moveRightOrDown } from './handler/movement';
 
 // Type definitions - only import facing ones
@@ -76,7 +76,17 @@ export default class Slider {
                 active: 'active'
             },
             ...config
-        }
+        };
+
+        // Set object values that get overwritten from above method - so replace the undefine with default value
+        if(this.config.controls.touch === undefined) this.config.controls.touch = true;
+        if(this.config.controls.arrows === undefined) this.config.controls.arrows = true;
+        if(this.config.controls.wheel === undefined) this.config.controls.wheel = true;
+        if(this.config.classes.slider === undefined) this.config.classes.slider  = 'slider';
+        if(this.config.classes.wrapper === undefined) this.config.classes.wrapper  = 'slider-wrapper';
+        if(this.config.classes.slide === undefined) this.config.classes.slide  = 'slide';
+        if(this.config.classes.active === undefined) this.config.classes.active  = 'active';
+
         // Store the elements we'll need to interact with
         this.sliderElement = document.getElementById(this.config.id);
         this.wrapperElement = this.sliderElement.querySelector(`.${this.config.classes.wrapper}`);
@@ -277,20 +287,14 @@ export default class Slider {
         // config.gap
         if(typeof this.config.gap != 'number') error(`Typeof "${typeof this.config.gap }" is not allow for "gap". It must be type "number"!`), hasError = true;
         // config.controls
-        if(!this.config.controls.touch && !this.config.controls.arrows && !this.config.controls.wheel) error(`You are passing an empty "controls" object! This must have at least one parameter to be valid!`), hasError = true;
-        else {
-            if(typeof this.config.controls.touch != 'boolean') error(`Typeof "${typeof this.config.controls.touch }" is not allow for "controls.touch". It must be type "boolean"!`), hasError = true;
-            if(typeof this.config.controls.arrows != 'boolean') error(`Typeof "${typeof this.config.controls.arrows }" is not allow for "controls.arrows". It must be type "boolean"!`), hasError = true;
-            if(typeof this.config.controls.wheel != 'boolean') error(`Typeof "${typeof this.config.controls.wheel }" is not allow for "controls.wheel". It must be type "boolean"!`), hasError = true;
-        }
+        if(typeof this.config.controls.touch != 'boolean') error(`Typeof "${typeof this.config.controls.touch }" is not allow for "controls.touch". It must be type "boolean"!`), hasError = true;
+        if(typeof this.config.controls.arrows != 'boolean') error(`Typeof "${typeof this.config.controls.arrows }" is not allow for "controls.arrows". It must be type "boolean"!`), hasError = true;
+        if(typeof this.config.controls.wheel != 'boolean') error(`Typeof "${typeof this.config.controls.wheel }" is not allow for "controls.wheel". It must be type "boolean"!`), hasError = true;
         // config.classes
-        if(!this.config.classes.slider && !this.config.classes.wrapper && !this.config.classes.slide && !this.config.classes.active) error(`You are passing an empty "classes" object! This must have at least one parameter to be valid!!`), hasError = true;
-        else {
-            if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
-            if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
-            if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
-            if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
-        }
+        if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
+        if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
+        if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
+        if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
         // config.triggerCB
         if(typeof this.config.triggerCB != 'function') error(`Typeof "${typeof this.config.triggerCB }" is not allow for "triggerCB". It must be type "function"!`), hasError = true;
         // Verify Elements
