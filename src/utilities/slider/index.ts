@@ -4,7 +4,7 @@ import applyStyle from '../../shared/apply-style';
 
 // Specific
 import './style/main.scss';
-import { touchEventsInitiate, touchEventsDestroy } from './handler/control-events';
+import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
 import { moveLeftOrUp, moveRightOrDown } from './handler/movement';
 
 // Type definitions - only import facing ones
@@ -142,7 +142,14 @@ export default class Slider {
                 }
             });
         }
-        // Keyboard events
+        // Keyboard arrow event
+        if(this.config.controls.arrows) {
+
+        }
+        // Mouse wheel event
+        if(this.config.controls.wheel) {
+
+        }
     }
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
@@ -246,6 +253,10 @@ export default class Slider {
         }
         // For config.enableTouch
         if(this.config.controls.touch) touchEventsDestroy();
+        // Keyboard arrow event
+        if(this.config.controls.arrows) arrowEventsDestroy();
+        // Mouse wheel event
+        if(this.config.controls.wheel) wheelEventsDestroy();
     }
 
     // Apply wrapper offset for x & y
