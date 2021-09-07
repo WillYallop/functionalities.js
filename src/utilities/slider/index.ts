@@ -328,6 +328,6 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
         // Set current active slide in frame
-        this.applyWrapperOffsetY();
+        this.applyWrapperOffsetY(this.activeSlide);
     }
 }
