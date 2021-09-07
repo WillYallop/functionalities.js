@@ -1,50 +1,39 @@
 function moveLeftOrUp() {
     let lingerBellow: number = this.config.perPage - 1;
-    let linger: boolean;
-    if(this.activeSlide + lingerBellow - 1 < 0) {
-        this.activeSlide = this.slidesElementsArray.length - this.config.perPage;
-        linger = false;
-    }
-    else if(this.activeSlide + lingerBellow > lingerBellow) {
-        this.activeSlide--;
-        linger = false;
-    } 
-    else {
-        this.activeSlide--;
-        linger = true;
-    }
+    if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - 1;
+    else this.activeSlide--;
+
+    // Work out the slide we should linger on to stop the slider only showing one slide if at the end
+    let slideToIndex: number;
+    if(this.activeSlide + lingerBellow >= this.slidesElementsArray.length - 1) slideToIndex =  this.slidesElementsArray.length - lingerBellow - 1;
+    else slideToIndex = this.activeSlide;
 
     if(this.config.direction === 'horizontal') {
-        if(!linger) this.applyWrapperOffsetX();
+        this.applyWrapperOffsetX(slideToIndex);
         return 'left';
     }
     else {
-        if(!linger) this.applyWrapperOffsetY();
+        this.applyWrapperOffsetY(slideToIndex);
         return 'up'
     }
 }
 
 function  moveRightOrDown() {
-    let linger: boolean;
-    if(this.activeSlide + 1 >= this.slidesElementsArray.length) {
-        this.activeSlide = 0;
-        linger = false;
-    }
-    else if(this.activeSlide + 1 >= this.slidesElementsArray.length - (this.config.perPage - 1)) {
-        this.activeSlide++;
-        linger = true;
-    }
-    else {
-        this.activeSlide++;
-        linger = false;
-    }
+    let lingerAbove: number = this.slidesElementsArray.length - 1 - (this.config.perPage - 1);
+    if(this.activeSlide + 1 >= this.slidesElementsArray.length) this.activeSlide = 0;
+    else this.activeSlide++;
+
+    // Work out the slide we should linger on to stop the slider only showing one slide if at the end
+    let slideToIndex: number;
+    if(this.activeSlide >= lingerAbove) slideToIndex = lingerAbove;
+    else slideToIndex = this.activeSlide;
 
     if(this.config.direction === 'horizontal') {
-        if(!linger) this.applyWrapperOffsetX(false);
+        this.applyWrapperOffsetX(slideToIndex);
         return 'right';
     }
     else {
-        if(!linger) this.applyWrapperOffsetY();
+        this.applyWrapperOffsetY(slideToIndex);
         return 'down'
     }
 }

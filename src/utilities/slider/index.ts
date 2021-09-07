@@ -101,9 +101,6 @@ export default class Slider {
         if(this.config.enableTouch) {
             this.touchEventsInitiate = touchEventsInitiate.bind(this);
             this.touchEventsInitiate((direction) => {
-                if(direction === 'leftUp' && this.activeSlide === 0) {
-                    return;
-                }
                 this.triggerSlide(direction);
                 if(this.config.autoPlay) this.pauseAutoplay = true, setTimeout(() => {this.pauseAutoplay = false}, 3000);
             });
@@ -224,14 +221,14 @@ export default class Slider {
     }
 
     // Apply wrapper offset for x & y
-    applyWrapperOffsetX() {
+    applyWrapperOffsetX(index: number) {
         // Set current active slide in frame
-        const offsetLeft = -Math.abs(this.slidesElementsArray[this.activeSlide].offsetLeft);
+        const offsetLeft = -Math.abs(this.slidesElementsArray[index].offsetLeft);
         applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
     }
-    applyWrapperOffsetY() {
+    applyWrapperOffsetY(index: number) {
         // Set current active slide in frame
-        const offsetTop = -Math.abs(this.slidesElementsArray[this.activeSlide].offsetTop);
+        const offsetTop = -Math.abs(this.slidesElementsArray[index].offsetTop);
         applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
     }
 
@@ -315,7 +312,7 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'maxWidth', `${slideMinWidth}px`);
         }
         // Set current active slide in frame
-        this.applyWrapperOffsetX();
+        this.applyWrapperOffsetX(this.activeSlide);
     }
     // Vertical
     else if(this.config.direction === ConfigDirection.vertical) {
