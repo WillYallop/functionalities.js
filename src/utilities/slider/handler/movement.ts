@@ -1,3 +1,13 @@
+// Loop
+function loopLeftOrUp() {
+
+}
+
+function loopRightOrDown() {
+
+}
+
+// Standard
 function moveLeftOrUp() {
     let lingerBellow: number = this.config.perPage - 1;
     if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - 1;
@@ -38,4 +48,4 @@ function  moveRightOrDown() {
     }
 }
 
-export { moveLeftOrUp, moveRightOrDown };
+export { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown };

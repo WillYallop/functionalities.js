@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown } from './handler/movement';
 
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
@@ -22,6 +22,7 @@ interface Config {
     slideDirection?: SlideDirectionType,
     gap?: number,
     speed?: number,
+    loop?: boolean,
     controls?: {
         touch?: boolean,
         arrows?: boolean,
@@ -62,6 +63,7 @@ export default class Slider {
             direction: ConfigDirection.horizontal,
             autoPlay: false,
             slideDirection: SlideDirection.rightDown,
+            loop: false,
             gap: 20,
             speed: 2000,
             controls: {
@@ -155,9 +157,15 @@ export default class Slider {
     triggerSlide(direction: SlideDirectionType) {
         let moveDirection;
         // Right or Down slide
-        if(direction === SlideDirection.rightDown) moveDirection = moveRightOrDown;
+        if(direction === SlideDirection.rightDown) {
+            if(!this.config.loop) moveDirection = moveRightOrDown;
+            else moveDirection = moveDirection = loopRightOrDown;
+        }
         // Left or Up slide
-        else if (direction === SlideDirection.leftUp) moveDirection = moveLeftOrUp;
+        else if (direction === SlideDirection.leftUp) {
+            if(!this.config.loop) moveDirection = moveLeftOrUp;
+            else moveDirection = moveDirection = loopLeftOrUp;
+        }
         // ERROR
         else {
             error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
@@ -260,6 +268,7 @@ export default class Slider {
     }
 
     // Apply wrapper offset for x & y
+    // Standard
     applyWrapperOffsetX(index: number) {
         // Set current active slide in frame
         const offsetLeft = -Math.abs(this.slidesElementsArray[index].offsetLeft);
@@ -270,6 +279,7 @@ export default class Slider {
         const offsetTop = -Math.abs(this.slidesElementsArray[index].offsetTop);
         applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
     }
+    // Loop
 
     // window resize event
     resizeEventHandler() {
@@ -290,6 +300,8 @@ export default class Slider {
         else if(this.config.direction != ConfigDirection.vertical && this.config.direction != ConfigDirection.horizontal) error(`"direction" can only be equal to ${ConfigDirection.vertical} or ${ConfigDirection.horizontal}!`), hasError = true;
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean"!`), hasError = true;
+        // config.loop
+        if(typeof this.config.loop != 'boolean') error(`Typeof "${typeof this.config.loop }" is not allow for "loop". It must be type "boolean"!`), hasError = true;
         // config.slideDirection
         if(typeof this.config.slideDirection != 'string') error(`Typeof "${typeof this.config.slideDirection }" is not allow for "slideDirection". It must be type "string"!`), hasError = true;
         else if(this.config.slideDirection != SlideDirection.rightDown && this.config.slideDirection != SlideDirection.leftUp) error(`"slideDirection" can only be equal to ${SlideDirection.rightDown} or ${SlideDirection.leftUp}!`), hasError = true;
@@ -348,8 +360,8 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'minWidth', `${slideMinWidth}px`);
             applyStyle(this.slidesElementsArray[i], 'maxWidth', `${slideMinWidth}px`);
         }
-        // Set current active slide in frame
-        this.applyWrapperOffsetX(this.activeSlide);
+        // Set current active slide in frame for non loop
+        if(!this.config.loop) this.applyWrapperOffsetX(this.activeSlide);
     }
     // Vertical
     else if(this.config.direction === ConfigDirection.vertical) {
@@ -364,7 +376,7 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'minHeight', `${slideMinHeight}px`);
             applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
-        // Set current active slide in frame
-        this.applyWrapperOffsetY(this.activeSlide);
+        // Set current active slide in frame for non loop
+        if(!this.config.loop) this.applyWrapperOffsetY(this.activeSlide);
     }
 }
