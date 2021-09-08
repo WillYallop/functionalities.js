@@ -1,12 +1,12 @@
-var prevPos: [number, number], newPos: [number, number], lock: boolean;
+var prevPos: [number, number], newPos: [number, number], unlocked: boolean;
 
 // Internal
 // Mouse and touch down/start
-const down = (x: number, y: number) => prevPos = [x, y];
+const down = (x: number, y: number) => {prevPos = [x, y], unlocked = true};
 // Mouse and touch move
 const move = (event: object, x: number, y: number, cb: (direction: SlideDirectionType) => void) => {
-    if(!lock) {
-        lock = true;
+    if(unlocked) {
+        unlocked = true;
         newPos = [x, y];
         let direction: SlideDirectionType;
     
@@ -16,16 +16,16 @@ const move = (event: object, x: number, y: number, cb: (direction: SlideDirectio
         // Movement is horizontal
         if(xDif > yDif) {
             if(newPos[0] > prevPos[0]) direction = 'leftUp';
-            else if(newPos[0] < prevPos[0]) direction = 'rightDown';
+            else if(newPos[0] <= prevPos[0]) direction = 'rightDown';
         }
         else {
             if(newPos[1] > prevPos[1]) direction = 'leftUp';
-            else if(newPos[1] < prevPos[1]) direction = 'rightDown';
+            else if(newPos[1] <= prevPos[1]) direction = 'rightDown';
         }
         cb(direction);
     }
 };
-const up = () => lock = false;
+const up = () => unlocked = false;
 
 // External
 export function touchEventsInitiate(triggerSlideCb: (direction: SlideDirectionType) => {}) {
