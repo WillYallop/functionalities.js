@@ -1,5 +1,3 @@
-type triggerSlideCbType = (direction: SlideDirectionType) => {};
-
 var prevPos: [number, number], newPos: [number, number], unlocked: boolean;
 var triggerSlideCb: triggerSlideCbType;
 
@@ -9,9 +7,9 @@ const mouseDownEvent = (e) => {prevPos = [e.clientX, e.clientY], unlocked = true
 const touchStartEvent = (e) => {prevPos = [e.changedTouches[0].screenX, e.changedTouches[0].screenY], unlocked = true};
 
 // Mouse and touch move
-const mouseMoveEvent = (e) => move(e.clientX, e.clientY, triggerSlideCb);
-const touchmoveEvent = (e) => move(e.changedTouches[0].screenX, e.changedTouches[0].screenY, triggerSlideCb);
-const move = (x: number, y: number, cb: triggerSlideCbType) => {
+const mouseMoveEvent = (e) => move(e.clientX, e.clientY);
+const touchmoveEvent = (e) => move(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
+const move = (x: number, y: number) => {
     if(unlocked) {
         unlocked = false;
         newPos = [x, y];
@@ -31,7 +29,7 @@ const move = (x: number, y: number, cb: triggerSlideCbType) => {
             else if(newPos[1] < prevPos[1]) direction = 'rightDown';
             else return;
         }
-        cb(direction);
+        triggerSlideCb(direction);
     }
 };
 
@@ -47,7 +45,6 @@ export function touchEventsInitiate(tSCb: triggerSlideCbType) {
 }
 
 export function touchEventsDestroy(sliderElement: HTMLElement) {
-    console.log('destroy')
     // Mouse and touch down/start
     sliderElement.removeEventListener('mousedown', mouseDownEvent, true);
     sliderElement.removeEventListener('touchstart', touchStartEvent, true);

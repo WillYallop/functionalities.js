@@ -12,6 +12,7 @@ export default class Slider {
     config: Config;
     // Functions
     touchEventsInitiate;
+    arrowEventsInitiate;
     adjustSlidesHandler: () => void;
     activeSlide: number;
     sliderLoop;
@@ -131,7 +132,15 @@ export default class Slider {
         }
         // Keyboard arrow event
         if(this.config.controls.arrows) {
-
+            this.arrowEventsInitiate = arrowEventsInitiate.bind(this);
+            this.arrowEventsInitiate((direction) => {
+                this.triggerSlide(direction);
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
+            });
         }
         // Mouse wheel event
         if(this.config.controls.wheel) {
@@ -255,12 +264,9 @@ export default class Slider {
             window.removeEventListener('resize', this.adjustSlidesHandler);
         }
         // For config.enableTouch
-        if(this.config.controls.touch) {
-
-            touchEventsDestroy(this.sliderElement);
-        }
+        if(this.config.controls.touch) touchEventsDestroy(this.sliderElement);
         // Keyboard arrow event
-        if(this.config.controls.arrows) arrowEventsDestroy();
+        if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
         // Mouse wheel event
         if(this.config.controls.wheel) wheelEventsDestroy();
     }
