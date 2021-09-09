@@ -7,40 +7,6 @@ import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
 import { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown } from './handler/movement';
 
-// Type definitions - only import facing ones
-enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
-type ConfigDirectionType = 'vertical' | 'horizontal';
-
-enum SlideDirection { rightDown = 'rightDown', leftUp = 'leftUp' };
-type SlideDirectionType = 'rightDown' | 'leftUp';
-
-interface Config {
-    id?: string,
-    perPage?: 'auto' | number,
-    direction?: ConfigDirectionType,
-    autoPlay?: boolean,
-    slideDirection?: SlideDirectionType,
-    gap?: number,
-    speed?: number,
-    loop?: boolean,
-    controls?: {
-        touch?: boolean,
-        arrows?: boolean,
-        wheel?: boolean
-    },
-    classes?: {
-        slider?: string,
-        wrapper?: string,
-        slide?: string,
-        active?: string
-    },
-    triggerCB?: (response: {
-        direction: string,
-        currentSlide: number,
-        totalSlides: number
-    }) => void
-};
-
 // Slider
 export default class Slider {
     config: Config;
@@ -59,9 +25,8 @@ export default class Slider {
     sliderElement: HTMLElement;
     wrapperElement: HTMLElement;
     slidesElementsArray: any; 
-    constructor(config: Config) {
+    constructor(id: string, config: Config) {
         this.config = {
-            id: 'sliderID',
             perPage: 2,
             direction: ConfigDirection.horizontal,
             autoPlay: false,
@@ -82,7 +47,7 @@ export default class Slider {
             },
             ...config
         };
-
+        this.config.id = id;
         // Set object values that get overwritten from above method - so replace the undefine with default value
         if(this.config.controls.touch === undefined) this.config.controls.touch = true;
         if(this.config.controls.arrows === undefined) this.config.controls.arrows = true;
@@ -139,19 +104,15 @@ export default class Slider {
         // Loop transition
         if(this.config.loop) {
             this.wrapperElement.addEventListener('transitionend', () => {
-                
                 if(this.lastDirection === SlideDirection.rightDown) {
                     this.wrapperElement.classList.remove('wrapper-transition');
                     this.wrapperElement.append(this.slidesElementsArray[0])
                     this.slidesElementsArray.push(this.slidesElementsArray.shift());
                     applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
-
                 }
                 else if(this.lastDirection === SlideDirection.leftUp) {
-                    // this.wrapperElement.classList.remove('wrapper-transition');
-                    // applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
-                }
 
+                }
             });
         }
 
@@ -179,6 +140,13 @@ export default class Slider {
     }
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
+        // If config.beforeSlide
+        if(this.config.beforeSlide != undefined) this.config.beforeSlide({
+            currentSlide: this.activeSlide,
+            totalSlides: this.slidesElementsArray.length,
+            lastDirection: this.lastDirection
+        });
+
         let moveDirection;
         // Right or Down slide
         this.lastDirection = direction;
@@ -198,11 +166,13 @@ export default class Slider {
         }
         const moveDirectionFunc: MovementType = moveDirection.bind(this);
         const directionMoved = moveDirectionFunc();
-        // If config.triggerCB
-        if(this.config.triggerCB != undefined) this.config.triggerCB({
+
+        // If config.afterSlide
+        if(this.config.afterSlide != undefined) this.config.afterSlide({
             direction: directionMoved,
             currentSlide: this.activeSlide,
-            totalSlides: this.slidesElementsArray.length
+            totalSlides: this.slidesElementsArray.length,
+            lastDirection: this.lastDirection
         });
         // Set active
         for(let i = 0; i < this.slidesElementsArray.length; i++) {
@@ -343,8 +313,8 @@ export default class Slider {
         if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
-        // config.triggerCB
-        if(typeof this.config.triggerCB != 'function') error(`Typeof "${typeof this.config.triggerCB }" is not allow for "triggerCB". It must be type "function"!`), hasError = true;
+        // config.afterSlideCB
+        if(typeof this.config.afterSlide != 'function') error(`Typeof "${typeof this.config.afterSlide }" is not allow for "afterSlide". It must be type "function"!`), hasError = true;
         // Verify Elements
         if(!this.sliderElement) error(`Cannot find slider element of ID: "${this.config.id}"!`), hasError = true;
         if(!this.wrapperElement) error(`Cannot find slider wrapper element of Class: "${this.config.classes.wrapper}"!`), hasError = true;
@@ -354,7 +324,6 @@ export default class Slider {
         return hasError;
     }
 }
-
 
 // Add fixed classes to apply basic style to the slider
 const applyBasicStyles = (elements: ApplyBasicStyles) => {
@@ -406,3 +375,50 @@ function adjustSlides() {
         if(!this.config.loop) this.applyWrapperOffsetY(this.activeSlide);
     }
 }
+
+
+
+
+
+
+
+
+// Type definitions - only import facing ones
+enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
+type ConfigDirectionType = 'vertical' | 'horizontal';
+
+enum SlideDirection { rightDown = 'rightDown', leftUp = 'leftUp' };
+type SlideDirectionType = 'rightDown' | 'leftUp';
+
+interface Config {
+    id?: string,
+    perPage?: 'auto' | number,
+    direction?: ConfigDirectionType,
+    autoPlay?: boolean,
+    slideDirection?: SlideDirectionType,
+    gap?: number,
+    speed?: number,
+    loop?: boolean,
+    controls?: {
+        touch?: boolean,
+        arrows?: boolean,
+        wheel?: boolean
+    },
+    classes?: {
+        slider?: string,
+        wrapper?: string,
+        slide?: string,
+        active?: string
+    },
+    beforeSlide?: (response: {
+        currentSlide: number,
+        totalSlides: number,
+        lastDirection: string
+    }) => void
+    afterSlide?: (response: {
+        direction: string,
+        currentSlide: number,
+        totalSlides: number,
+        lastDirection: string
+    }) => void
+};
