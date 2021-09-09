@@ -50,6 +50,9 @@ export default class Slider {
     activeSlide: number;
     sliderLoop;
     restartAutoPlayTimeout;
+    slideDirection: SlideDirectionType;
+    lastDirection: SlideDirectionType;
+    translateX: number;
     autoPlayPaused: boolean;
     pauseAutoplay: boolean;
     // Elements
@@ -100,6 +103,7 @@ export default class Slider {
             }
         };
         this.activeSlide = 0;
+        this.translateX = 0;
         // Init
         if(!this.verify()) this.initialise(); 
     } 
@@ -132,6 +136,26 @@ export default class Slider {
         this.resizeEventHandler();
     }
     eventsController() {
+        // Loop transition
+        if(this.config.loop) {
+            this.wrapperElement.addEventListener('transitionend', () => {
+                
+                if(this.lastDirection === SlideDirection.rightDown) {
+                    this.wrapperElement.classList.remove('wrapper-transition');
+                    this.wrapperElement.append(this.slidesElementsArray[0])
+                    this.slidesElementsArray.push(this.slidesElementsArray.shift());
+                    applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+
+                }
+                else if(this.lastDirection === SlideDirection.leftUp) {
+                    // this.wrapperElement.classList.remove('wrapper-transition');
+                    // applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+                }
+
+            });
+        }
+
+        // Controls
         // Touch events - mobile and mouse   
         if(this.config.controls.touch) {
             this.touchEventsInitiate = touchEventsInitiate.bind(this);
@@ -157,6 +181,7 @@ export default class Slider {
     triggerSlide(direction: SlideDirectionType) {
         let moveDirection;
         // Right or Down slide
+        this.lastDirection = direction;
         if(direction === SlideDirection.rightDown) {
             if(!this.config.loop) moveDirection = moveRightOrDown;
             else moveDirection = moveDirection = loopRightOrDown;
@@ -183,8 +208,8 @@ export default class Slider {
         for(let i = 0; i < this.slidesElementsArray.length; i++) {
             let slide = this.slidesElementsArray[i];
             if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
+            if(slide.getAttribute('og-position') == this.activeSlide) slide.classList.add(this.config.classes.active);
         }
-        this.slidesElementsArray[this.activeSlide].classList.add(this.config.classes.active);
     }
     // Stop the autoPlay slider
     pause() {
@@ -279,7 +304,7 @@ export default class Slider {
         const offsetTop = -Math.abs(this.slidesElementsArray[index].offsetTop);
         applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
     }
-    // Loop
+    
 
     // window resize event
     resizeEventHandler() {
@@ -335,6 +360,7 @@ export default class Slider {
 const applyBasicStyles = (elements: ApplyBasicStyles) => {
     elements.slider.classList.add('functionalities-slider');
     elements.wrapper.classList.add('functionalities-wrapper');
+    elements.wrapper.classList.add('wrapper-transition');
     for(let i = 0; i < elements.slides.length; i++) {
         elements.slides[i].setAttribute('og-position', `${i}`);
         elements.slides[i].classList.add('functionalities-slide');

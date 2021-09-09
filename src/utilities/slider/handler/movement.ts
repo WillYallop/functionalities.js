@@ -1,11 +1,56 @@
+import applyStyle from '../../../shared/apply-style';
+
 // Loop
 function loopLeftOrUp() {
+    this.wrapperElement.prepend(this.slidesElementsArray[this.slidesElementsArray.length - 1])
+    this.slidesElementsArray.unshift(this.slidesElementsArray.pop());
 
+    this.wrapperElement.classList.remove('wrapper-transition');
+
+    // Do transition first
+    if(this.config.direction === 'horizontal') {
+        let offsetLeft = -Math.abs(this.slidesElementsArray[1].offsetLeft);
+        applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+        this.activeSlide = parseInt(this.slidesElementsArray[0].getAttribute('og-position'));
+        
+        setTimeout(() => {
+            this.wrapperElement.classList.add('wrapper-transition');
+            applyStyle(this.wrapperElement, 'transform', `translateX(0px)`);
+        });
+
+        return 'left';
+    }
+    else {
+        let offsetTop = -Math.abs(this.slidesElementsArray[1].offsetTop);
+        applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
+        this.activeSlide = parseInt(this.slidesElementsArray[0].getAttribute('og-position'));
+        
+        setTimeout(() => {
+            this.wrapperElement.classList.add('wrapper-transition');
+            applyStyle(this.wrapperElement, 'transform', `translateY(0px)`);
+        });
+
+        return 'up'
+    }
 }
 
 function loopRightOrDown() {
-
+    this.wrapperElement.classList.add('wrapper-transition');
+    // Do transition first
+    if(this.config.direction === 'horizontal') {
+        let offsetLeft = -Math.abs(this.slidesElementsArray[1].offsetLeft);
+        applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+        this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
+        return 'right';
+    }
+    else {
+        let offsetTop = -Math.abs(this.slidesElementsArray[1].offsetTop);
+        applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
+        this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
+        return 'down'
+    }
 }
+
 
 // Standard
 function moveLeftOrUp() {
