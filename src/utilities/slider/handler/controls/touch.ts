@@ -1,10 +1,17 @@
+type triggerSlideCbType = (direction: SlideDirectionType) => {};
+
 var prevPos: [number, number], newPos: [number, number], unlocked: boolean;
+var triggerSlideCb: triggerSlideCbType;
 
 // Internal
 // Mouse and touch down/start
-const down = (x: number, y: number) => {prevPos = [x, y], unlocked = true};
+const mouseDownEvent = (e) => {prevPos = [e.clientX, e.clientY], unlocked = true};
+const touchStartEvent = (e) => {prevPos = [e.changedTouches[0].screenX, e.changedTouches[0].screenY], unlocked = true};
+
 // Mouse and touch move
-const move = (event: object, x: number, y: number, cb: (direction: SlideDirectionType) => void) => {
+const mouseMoveEvent = (e) => move(e.clientX, e.clientY, triggerSlideCb);
+const touchmoveEvent = (e) => move(e.changedTouches[0].screenX, e.changedTouches[0].screenY, triggerSlideCb);
+const move = (x: number, y: number, cb: triggerSlideCbType) => {
     if(unlocked) {
         unlocked = false;
         newPos = [x, y];
@@ -29,15 +36,22 @@ const move = (event: object, x: number, y: number, cb: (direction: SlideDirectio
 };
 
 // External
-export function touchEventsInitiate(triggerSlideCb: (direction: SlideDirectionType) => {}) {
+export function touchEventsInitiate(tSCb: triggerSlideCbType) {
+    triggerSlideCb = tSCb;
     // Mouse and touch down/start
-    this.sliderElement.addEventListener('mousedown', (e) => down(e.clientX, e.clientY), true);
-    this.sliderElement.addEventListener('touchstart', (e) => down(e.changedTouches[0].screenX, e.changedTouches[0].screenY), true);
+    this.sliderElement.addEventListener('mousedown', mouseDownEvent, true);
+    this.sliderElement.addEventListener('touchstart', touchStartEvent, true);
     // Mouse and touch move
-    this.sliderElement.addEventListener('mousemove', (e) => move(e, e.clientX, e.clientY, triggerSlideCb), true);
-    this.sliderElement.addEventListener('touchmove', (e) => move(e, e.changedTouches[0].screenX, e.changedTouches[0].screenY, triggerSlideCb), true);
+    this.sliderElement.addEventListener('mousemove', mouseMoveEvent, true);
+    this.sliderElement.addEventListener('touchmove', touchmoveEvent, true);
 }
 
-export function touchEventsDestroy() {
-
+export function touchEventsDestroy(sliderElement: HTMLElement) {
+    console.log('destroy')
+    // Mouse and touch down/start
+    sliderElement.removeEventListener('mousedown', mouseDownEvent, true);
+    sliderElement.removeEventListener('touchstart', touchStartEvent, true);
+    // Mouse and touch move
+    sliderElement.removeEventListener('mousemove', mouseMoveEvent, true);
+    sliderElement.removeEventListener('touchmove', touchmoveEvent, true);
 }

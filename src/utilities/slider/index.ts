@@ -255,7 +255,10 @@ export default class Slider {
             window.removeEventListener('resize', this.adjustSlidesHandler);
         }
         // For config.enableTouch
-        if(this.config.controls.touch) touchEventsDestroy();
+        if(this.config.controls.touch) {
+
+            touchEventsDestroy(this.sliderElement);
+        }
         // Keyboard arrow event
         if(this.config.controls.arrows) arrowEventsDestroy();
         // Mouse wheel event
