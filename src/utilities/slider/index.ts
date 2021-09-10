@@ -13,6 +13,7 @@ export default class Slider {
     // Functions
     touchEventsInitiate;
     arrowEventsInitiate;
+    wheelEventsInitiate;
     adjustSlidesHandler: () => void;
     activeSlide: number;
     sliderLoop;
@@ -144,7 +145,15 @@ export default class Slider {
         }
         // Mouse wheel event
         if(this.config.controls.wheel) {
-
+            this.wheelEventsInitiate = wheelEventsInitiate.bind(this);
+            this.wheelEventsInitiate((direction) => {
+                this.triggerSlide(direction);
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
+            });
         }
     }
     // Trigger slide
@@ -268,7 +277,7 @@ export default class Slider {
         // Keyboard arrow event
         if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
         // Mouse wheel event
-        if(this.config.controls.wheel) wheelEventsDestroy();
+        if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
     }
 
     // Apply wrapper offset for x & y
