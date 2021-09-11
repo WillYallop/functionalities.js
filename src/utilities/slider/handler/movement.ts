@@ -85,31 +85,22 @@ function loopNavToSingle(targetIndex: number) {
 
     this.activeSlide = targetSlideIndex;
 
-    // 
     let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
     applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
 
     // Controller
-    if(direction === 'right') {
+    if(direction != false) {
         for(let i = 0; i < totalPush; i++) {
-
-        }
-    }
-    else if (direction === 'left') {
-        for(let i = 0; i < totalPush; i++) {
-            console.log('left')
+            if(direction === 'right') {
+                console.log('right');
+            }
+            else if (direction === 'left') {
+                console.log('left');
+            }
         }
     }
     else {
         console.log('dont move');
-    }
-
-
-    
-    if(this.config.direction === 'horizontal') {
-
-    }
-    else {
 
     }
 
