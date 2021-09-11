@@ -58,14 +58,12 @@ function loopRightOrDown() {
     if(this.config.direction === 'horizontal') return 'right';
     else return 'down'
 }
-function loopNavToSingle(targetIndex: number) {
 
-    // Animate on
-    // Translate to the targetIndex
-    // Animate off
-    // Work out how many slides are before the target in the array
-    // Move them to the end
-    // Translate to 0 
+
+
+function loopNavToSingle(targetIndex: number) {
+    console.clear()
+    this.wrapperElement.classList.add('wrapper-transition');
 
     // Get the target slides index
     var targetSlideIndex;
@@ -76,32 +74,43 @@ function loopNavToSingle(targetIndex: number) {
     }
     
     // Work out the direction and how many we need to travel
-    let totalPush = Math.abs(targetSlideIndex - this.activeSlide);
     let direction;
 
     if(targetSlideIndex > this.activeSlide) direction = 'right';
     else if (targetSlideIndex < this.activeSlide) direction = 'left';
     else direction = false;
 
-    this.activeSlide = targetSlideIndex;
+    this.activeSlide = targetIndex;
 
-    let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
-    applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
-
-    // Controller
     if(direction != false) {
-        for(let i = 0; i < totalPush; i++) {
-            if(direction === 'right') {
-                console.log('right');
+        let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
+        applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+    
+        setTimeout(() => {
+            this.wrapperElement.classList.remove('wrapper-transition');
+            applyStyle(this.wrapperElement, 'transform', `translateX(0px)`);
+    
+            let orderArray = [];
+            let start = targetIndex;
+            let overflow = 0;
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                if(start < this.slidesElementsArray.length) orderArray.push(start++);
+                else orderArray.push(overflow++);
             }
-            else if (direction === 'left') {
-                console.log('left');
+        
+            // Set slides order based on orderArray values
+            let tempArray = [];
+            for(let i = 0; i < orderArray.length; i++) {
+                let slide = this.slidesElementsArray.find( x => parseInt(x.getAttribute('og-position')) === orderArray[i]);
+                tempArray.push(slide);
             }
-        }
-    }
-    else {
-        console.log('dont move');
+            // Reorder elements
+            for(let i = 0; i < tempArray.length; i++) {
+                this.wrapperElement.append(tempArray[i]);
+            }
 
+            this.slidesElementsArray = tempArray;
+        }, 300);
     }
 
 }
@@ -152,64 +161,3 @@ function standardNavToSingle(targetIndex: number) {
 }
 
 export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle };
-
-
-
-// function loopNavToSingle(targetIndex: number) {
-
-//     // Animate on
-//     // Translate to the targetIndex
-//     // Animate off
-//     // Work out how many slides are before the target in the array
-//     // Move them to the end
-//     // Translate to 0 
-
-//     // let targetSlideIndex =  parseInt(this.slidesElementsArray[targetIndex].getAttribute('og-position'));
-//     var targetSlideIndex;
-//     for(let i = 0; i < this.slidesElementsArray.length; i++) {
-//         let currentSlide = this.slidesElementsArray[i];
-//         let pos = parseInt(currentSlide.getAttribute('og-position'));
-//         if(pos === targetIndex) targetSlideIndex = i;
-//     }
-    
-    
-
-//     // Animate on
-//     this.wrapperElement.classList.add('wrapper-transition');
-//     // Translate to the targetIndex
-//     let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
-//     applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
-
-
-//     setTimeout(() => {
-//         let totalPush = Math.abs(targetSlideIndex - this.activeSlide);
-//         let direction;
-
-//         if(targetSlideIndex > this.activeSlide) direction = 'right';
-//         else if (targetSlideIndex < this.activeSlide) direction = 'left';
-//         else direction = false;
-
-//         this.activeSlide = targetSlideIndex;
-
-
-//         if(direction === 'right') {
-//             console.log(totalPush, direction);
-//         }
-//         else if (direction === 'left') {
-//             console.log(totalPush, direction);
-//         }
-//         else {
-//             console.log('dont move');
-//         }
-//     }, 300);
-
-
-    
-//     if(this.config.direction === 'horizontal') {
-
-//     }
-//     else {
-
-//     }
-
-// }

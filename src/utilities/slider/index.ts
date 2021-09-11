@@ -103,19 +103,19 @@ export default class Slider {
     }
     eventsController() {
         // Loop transition
-        if(this.config.loop) {
-            this.wrapperElement.addEventListener('transitionend', () => {
-                if(this.lastDirection === SlideDirection.rightDown) {
-                    this.wrapperElement.classList.remove('wrapper-transition');
-                    this.wrapperElement.append(this.slidesElementsArray[0])
-                    this.slidesElementsArray.push(this.slidesElementsArray.shift());
-                    applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
-                }
-                else if(this.lastDirection === SlideDirection.leftUp) {
+        // if(this.config.loop) {
+        //     this.wrapperElement.addEventListener('transitionend', () => {
+        //         if(this.lastDirection === SlideDirection.rightDown) {
+        //             this.wrapperElement.classList.remove('wrapper-transition');
+        //             this.wrapperElement.append(this.slidesElementsArray[0])
+        //             this.slidesElementsArray.push(this.slidesElementsArray.shift());
+        //             applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+        //         }
+        //         else if(this.lastDirection === SlideDirection.leftUp) {
 
-                }
-            });
-        }
+        //         }
+        //     });
+        // }
 
         // Controls
         // Touch events - mobile and mouse   
