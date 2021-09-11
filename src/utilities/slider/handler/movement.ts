@@ -40,33 +40,25 @@ function loopRightOrDown() {
         let offsetLeft = -Math.abs(this.slidesElementsArray[1].offsetLeft);
         applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
         this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
-        return 'right';
     }
     else {
         let offsetTop = -Math.abs(this.slidesElementsArray[1].offsetTop);
         applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
         this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
-        return 'down'
     }
+
+    setTimeout(() => {
+        this.wrapperElement.classList.remove('wrapper-transition');
+        this.wrapperElement.append(this.slidesElementsArray[0])
+        this.slidesElementsArray.push(this.slidesElementsArray.shift());
+        applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+    }, 300);
+
+    // Return
+    if(this.config.direction === 'horizontal') return 'right';
+    else return 'down'
 }
-function loopNavToSingle(targetIndex: number) {
-    let index = targetIndex - 1;
 
-    this.wrapperElement.classList.add('wrapper-transition');
-    if(this.config.direction === 'horizontal') {
-
-        // Get slide with matching index - 1
-
-        // Transition it to the start
-
-        return 'right';
-    }
-    else {
-
-
-        return 'down'
-    }
-}
 
 // Standard
 function moveLeftOrUp() {
@@ -107,10 +99,6 @@ function moveRightOrDown() {
         return 'down'
     }
 }
-function standardNavToSingle(targetIndex: number) {
-    let index = targetIndex - 1;
 
-    return 'left';
-}
 
-export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle };
+export { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown };
