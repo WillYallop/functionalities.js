@@ -17,6 +17,7 @@ export default class Slider {
     adjustSlidesHandler: () => void;
     activeSlide: number;
     sliderLoop;
+    lastSlide: Date;
     restartAutoPlayTimeout;
     slideDirection: SlideDirectionType;
     lastDirection: SlideDirectionType;
@@ -44,8 +45,7 @@ export default class Slider {
             classes: {
                 slider: 'slider',
                 wrapper: 'slider-wrapper',
-                slide: 'slide',
-                active: 'active'
+                slide: 'slide'
             },
             ...config
         };
@@ -57,7 +57,6 @@ export default class Slider {
         if(this.config.classes.slider === undefined) this.config.classes.slider  = 'slider';
         if(this.config.classes.wrapper === undefined) this.config.classes.wrapper  = 'slider-wrapper';
         if(this.config.classes.slide === undefined) this.config.classes.slide  = 'slide';
-        if(this.config.classes.active === undefined) this.config.classes.active  = 'active';
 
         // Store the elements we'll need to interact with
         this.sliderElement = document.getElementById(this.config.id);
@@ -71,6 +70,7 @@ export default class Slider {
         };
         this.activeSlide = 0;
         this.translateX = 0;
+        this.lastSlide = new Date();
         // Init
         if(!this.verify()) this.initialise(); 
     } 
@@ -81,7 +81,6 @@ export default class Slider {
             wrapper: this.wrapperElement,
             slides: this.slidesElementsArray
         });
-        this.slidesElementsArray[this.activeSlide].classList.add(this.config.classes.active);
 
         // Adjust slides based on config.perPage so everything is translated and overflowing correctly
         if(this.config.perPage != 'auto') {
@@ -157,48 +156,46 @@ export default class Slider {
         }
     }
 
-
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
-        // If config.beforeSlide
-        if(this.config.beforeSlide != undefined) this.config.beforeSlide({
-            currentSlide: this.activeSlide,
-            totalSlides: this.slidesElementsArray.length,
-            lastDirection: this.lastDirection
-        });
+        // Check slide cooldown
+        let currentDate = new Date;
+        if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
+            // If config.beforeSlide
+            if(this.config.beforeSlide != undefined) this.config.beforeSlide({
+                currentSlide: this.activeSlide,
+                totalSlides: this.slidesElementsArray.length,
+                lastDirection: this.lastDirection
+            });
 
-        let moveDirection;
-        // Right or Down slide
-        this.lastDirection = direction;
-        if(direction === SlideDirection.rightDown) {
-            if(!this.config.loop) moveDirection = moveRightOrDown;
-            else moveDirection = moveDirection = loopRightOrDown;
-        }
-        // Left or Up slide
-        else if (direction === SlideDirection.leftUp) {
-            if(!this.config.loop) moveDirection = moveLeftOrUp;
-            else moveDirection = moveDirection = loopLeftOrUp;
-        }
-        // ERROR
-        else {
-            error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
-            return;
-        }
-        const moveDirectionFunc: MovementType = moveDirection.bind(this);
-        const directionMoved = moveDirectionFunc();
+            let moveDirection;
+            // Right or Down slide
+            this.lastDirection = direction;
+            if(direction === SlideDirection.rightDown) {
+                if(!this.config.loop) moveDirection = moveRightOrDown;
+                else moveDirection = moveDirection = loopRightOrDown;
+            }
+            // Left or Up slide
+            else if (direction === SlideDirection.leftUp) {
+                if(!this.config.loop) moveDirection = moveLeftOrUp;
+                else moveDirection = moveDirection = loopLeftOrUp;
+            }
+            // ERROR
+            else {
+                error(`triggerSlide paramater must be type string and either "${SlideDirection.rightDown}"" or "${SlideDirection.leftUp}"".`);
+                return;
+            }
+            const moveDirectionFunc: MovementType = moveDirection.bind(this);
+            const directionMoved = moveDirectionFunc();
+            this.lastSlide = new Date();
 
-        // If config.afterSlide
-        if(this.config.afterSlide != undefined) this.config.afterSlide({
-            direction: directionMoved,
-            currentSlide: this.activeSlide,
-            totalSlides: this.slidesElementsArray.length,
-            lastDirection: this.lastDirection
-        });
-        // Set active
-        for(let i = 0; i < this.slidesElementsArray.length; i++) {
-            let slide = this.slidesElementsArray[i];
-            if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
-            if(slide.getAttribute('og-position') == this.activeSlide) slide.classList.add(this.config.classes.active);
+            // If config.afterSlide
+            if(this.config.afterSlide != undefined) this.config.afterSlide({
+                direction: directionMoved,
+                currentSlide: this.activeSlide,
+                totalSlides: this.slidesElementsArray.length,
+                lastDirection: this.lastDirection
+            });
         }
     }
     // Stop the autoPlay slider
@@ -264,10 +261,6 @@ export default class Slider {
             };
         });
     }
-    // Reset the the slider
-    refresh() {
-
-    }
     // Destroy all event listeners
     destory() {
         // Destroy resize
@@ -281,9 +274,6 @@ export default class Slider {
         // Mouse wheel event
         if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
     }
-
-
-
 
     // Apply wrapper offset for x & y
     // Standard
@@ -334,7 +324,6 @@ export default class Slider {
         if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
-        if(typeof this.config.classes.active != 'string') error(`Typeof "${typeof this.config.classes.active }" is not allow for "classes.active". It must be type "string"!`), hasError = true;
         // config.afterSlideCB
         if(typeof this.config.afterSlide != 'function') error(`Typeof "${typeof this.config.afterSlide }" is not allow for "afterSlide". It must be type "function"!`), hasError = true;
         // Verify Elements
@@ -404,7 +393,6 @@ function adjustSlides() {
 
 
 
-
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
 type ConfigDirectionType = 'vertical' | 'horizontal';
@@ -429,8 +417,7 @@ interface Config {
     classes?: {
         slider?: string,
         wrapper?: string,
-        slide?: string,
-        active?: string
+        slide?: string
     },
     beforeSlide?: (response: {
         currentSlide: number,

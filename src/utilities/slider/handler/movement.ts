@@ -47,13 +47,6 @@ function loopRightOrDown() {
         this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
     }
 
-    setTimeout(() => {
-        this.wrapperElement.classList.remove('wrapper-transition');
-        this.wrapperElement.append(this.slidesElementsArray[0])
-        this.slidesElementsArray.push(this.slidesElementsArray.shift());
-        applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
-    }, 300);
-
     // Return
     if(this.config.direction === 'horizontal') return 'right';
     else return 'down'
