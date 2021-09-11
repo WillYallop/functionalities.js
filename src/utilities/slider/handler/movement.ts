@@ -47,11 +47,73 @@ function loopRightOrDown() {
         this.activeSlide = parseInt(this.slidesElementsArray[1].getAttribute('og-position'));
     }
 
+    setTimeout(() => {
+        this.wrapperElement.classList.remove('wrapper-transition');
+        this.wrapperElement.append(this.slidesElementsArray[0])
+        this.slidesElementsArray.push(this.slidesElementsArray.shift());
+        applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+    }, 300);
+
     // Return
     if(this.config.direction === 'horizontal') return 'right';
     else return 'down'
 }
+function loopNavToSingle(targetIndex: number) {
 
+    // Animate on
+    // Translate to the targetIndex
+    // Animate off
+    // Work out how many slides are before the target in the array
+    // Move them to the end
+    // Translate to 0 
+
+    // Get the target slides index
+    var targetSlideIndex;
+    for(let i = 0; i < this.slidesElementsArray.length; i++) {
+        let currentSlide = this.slidesElementsArray[i];
+        let pos = parseInt(currentSlide.getAttribute('og-position'));
+        if(pos === targetIndex) targetSlideIndex = i;
+    }
+    
+    // Work out the direction and how many we need to travel
+    let totalPush = Math.abs(targetSlideIndex - this.activeSlide);
+    let direction;
+
+    if(targetSlideIndex > this.activeSlide) direction = 'right';
+    else if (targetSlideIndex < this.activeSlide) direction = 'left';
+    else direction = false;
+
+    this.activeSlide = targetSlideIndex;
+
+    // 
+    let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
+    applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+
+    // Controller
+    if(direction === 'right') {
+        for(let i = 0; i < totalPush; i++) {
+
+        }
+    }
+    else if (direction === 'left') {
+        for(let i = 0; i < totalPush; i++) {
+            console.log('left')
+        }
+    }
+    else {
+        console.log('dont move');
+    }
+
+
+    
+    if(this.config.direction === 'horizontal') {
+
+    }
+    else {
+
+    }
+
+}
 
 // Standard
 function moveLeftOrUp() {
@@ -92,6 +154,71 @@ function moveRightOrDown() {
         return 'down'
     }
 }
+function standardNavToSingle(targetIndex: number) {
+    let index = targetIndex - 1;
+
+    return 'left';
+}
+
+export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle };
 
 
-export { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown };
+
+// function loopNavToSingle(targetIndex: number) {
+
+//     // Animate on
+//     // Translate to the targetIndex
+//     // Animate off
+//     // Work out how many slides are before the target in the array
+//     // Move them to the end
+//     // Translate to 0 
+
+//     // let targetSlideIndex =  parseInt(this.slidesElementsArray[targetIndex].getAttribute('og-position'));
+//     var targetSlideIndex;
+//     for(let i = 0; i < this.slidesElementsArray.length; i++) {
+//         let currentSlide = this.slidesElementsArray[i];
+//         let pos = parseInt(currentSlide.getAttribute('og-position'));
+//         if(pos === targetIndex) targetSlideIndex = i;
+//     }
+    
+    
+
+//     // Animate on
+//     this.wrapperElement.classList.add('wrapper-transition');
+//     // Translate to the targetIndex
+//     let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
+//     applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+
+
+//     setTimeout(() => {
+//         let totalPush = Math.abs(targetSlideIndex - this.activeSlide);
+//         let direction;
+
+//         if(targetSlideIndex > this.activeSlide) direction = 'right';
+//         else if (targetSlideIndex < this.activeSlide) direction = 'left';
+//         else direction = false;
+
+//         this.activeSlide = targetSlideIndex;
+
+
+//         if(direction === 'right') {
+//             console.log(totalPush, direction);
+//         }
+//         else if (direction === 'left') {
+//             console.log(totalPush, direction);
+//         }
+//         else {
+//             console.log('dont move');
+//         }
+//     }, 300);
+
+
+    
+//     if(this.config.direction === 'horizontal') {
+
+//     }
+//     else {
+
+//     }
+
+// }

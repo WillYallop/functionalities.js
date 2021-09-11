@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle } from './handler/movement';
 
 // Slider
 export default class Slider {
@@ -186,12 +186,39 @@ export default class Slider {
                 return;
             }
             const moveDirectionFunc: MovementType = moveDirection.bind(this);
-            const directionMoved = moveDirectionFunc();
+            moveDirectionFunc();
             this.lastSlide = new Date();
 
             // If config.afterSlide
             if(this.config.afterSlide != undefined) this.config.afterSlide({
-                direction: directionMoved,
+                currentSlide: this.activeSlide,
+                totalSlides: this.slidesElementsArray.length,
+                lastDirection: this.lastDirection
+            });
+        }
+    }
+    // 
+    toSlide(slideIndex: number) {
+        if(typeof slideIndex != 'number') {
+            error(`Typeof "${ typeof slideIndex }" is not allow for the paramater on this function. It must be type "number".`);
+            return;
+        }
+
+        // Verify slide number
+        if(slideIndex > this.slidesElementsArray.length || slideIndex < 0) {
+            error(`Cannot find slide with position of ${slideIndex}! Please make sure the slide number you are wanting to visit exists!`);
+            error(`Tip: this function counts slides starting from 0!`);
+        }
+        else {
+            let moveDirection;
+            if(!this.config.loop) moveDirection = standardNavToSingle;
+            else moveDirection = loopNavToSingle;
+
+            const moveDirectionFunc= moveDirection.bind(this);
+            moveDirectionFunc(slideIndex);
+
+            // If config.afterSlide
+            if(this.config.afterSlide != undefined) this.config.afterSlide({
                 currentSlide: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
@@ -425,7 +452,6 @@ interface Config {
         lastDirection: string
     }) => void
     afterSlide?: (response: {
-        direction: string,
         currentSlide: number,
         totalSlides: number,
         lastDirection: string
