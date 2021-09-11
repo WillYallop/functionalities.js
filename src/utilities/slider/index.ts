@@ -32,9 +32,9 @@ export default class Slider {
         this.config = {
             perPage: 2,
             direction: ConfigDirection.horizontal,
-            autoPlay: false,
+            autoPlay: true,
             slideDirection: SlideDirection.rightDown,
-            loop: false,
+            loop: true,
             gap: 20,
             speed: 2000,
             controls: {

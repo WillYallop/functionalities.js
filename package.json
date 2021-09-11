@@ -1,6 +1,6 @@
 {
   "name": "functionalities",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple slider library to speed up dev.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
