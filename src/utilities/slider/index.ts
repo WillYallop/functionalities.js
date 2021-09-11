@@ -191,7 +191,6 @@ export default class Slider {
 
             // If config.afterSlide
             if(this.config.afterSlide != undefined) this.config.afterSlide({
-                direction: directionMoved,
                 currentSlide: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
@@ -425,7 +424,6 @@ interface Config {
         lastDirection: string
     }) => void
     afterSlide?: (response: {
-        direction: string,
         currentSlide: number,
         totalSlides: number,
         lastDirection: string
