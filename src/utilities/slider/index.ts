@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle } from './handler/movement';
 
 // Slider
 export default class Slider {
@@ -156,6 +156,9 @@ export default class Slider {
             });
         }
     }
+
+
+
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
         // If config.beforeSlide
@@ -184,6 +187,29 @@ export default class Slider {
         }
         const moveDirectionFunc: MovementType = moveDirection.bind(this);
         const directionMoved = moveDirectionFunc();
+
+        // If config.afterSlide
+        if(this.config.afterSlide != undefined) this.config.afterSlide({
+            direction: directionMoved,
+            currentSlide: this.activeSlide,
+            totalSlides: this.slidesElementsArray.length,
+            lastDirection: this.lastDirection
+        });
+        // Set active
+        for(let i = 0; i < this.slidesElementsArray.length; i++) {
+            let slide = this.slidesElementsArray[i];
+            if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
+            if(slide.getAttribute('og-position') == this.activeSlide) slide.classList.add(this.config.classes.active);
+        }
+    }
+    // 
+    toSlide(slideIndex: number) {
+        let moveDirection;
+        if(this.config.loop) moveDirection = standardNavToSingle;
+        else moveDirection = loopNavToSingle;
+
+        const moveDirectionFunc= moveDirection.bind(this);
+        const directionMoved = moveDirectionFunc(slideIndex);
 
         // If config.afterSlide
         if(this.config.afterSlide != undefined) this.config.afterSlide({
@@ -280,6 +306,9 @@ export default class Slider {
         if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
     }
 
+
+
+
     // Apply wrapper offset for x & y
     // Standard
     applyWrapperOffsetX(index: number) {
@@ -292,7 +321,6 @@ export default class Slider {
         const offsetTop = -Math.abs(this.slidesElementsArray[index].offsetTop);
         applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
     }
-    
 
     // window resize event
     resizeEventHandler() {

@@ -33,7 +33,6 @@ function loopLeftOrUp() {
         return 'up'
     }
 }
-
 function loopRightOrDown() {
     this.wrapperElement.classList.add('wrapper-transition');
     // Do transition first
@@ -50,7 +49,10 @@ function loopRightOrDown() {
         return 'down'
     }
 }
-
+function loopNavToSingle(targetIndex: number) {
+    
+    return 'left';
+}
 
 // Standard
 function moveLeftOrUp() {
@@ -72,8 +74,7 @@ function moveLeftOrUp() {
         return 'up'
     }
 }
-
-function  moveRightOrDown() {
+function moveRightOrDown() {
     let lingerAbove: number = this.slidesElementsArray.length - 1 - (this.config.perPage - 1);
     if(this.activeSlide + 1 >= this.slidesElementsArray.length) this.activeSlide = 0;
     else this.activeSlide++;
@@ -92,5 +93,9 @@ function  moveRightOrDown() {
         return 'down'
     }
 }
+function standardNavToSingle(targetIndex: number) {
 
-export { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown };
+    return 'left';
+}
+
+export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle };

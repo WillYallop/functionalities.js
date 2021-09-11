@@ -33,6 +33,8 @@ const move = (x: number, y: number) => {
     }
 };
 
+const up = () => unlocked = false;
+
 // External
 export function touchEventsInitiate(tSCb: triggerSlideCbType) {
     triggerSlideCb = tSCb;
@@ -42,6 +44,9 @@ export function touchEventsInitiate(tSCb: triggerSlideCbType) {
     // Mouse and touch move
     this.sliderElement.addEventListener('mousemove', mouseMoveEvent, true);
     this.sliderElement.addEventListener('touchmove', touchmoveEvent, true);
+    // Mouse up 
+    this.sliderElement.addEventListener('mouseup', up, true);
+    this.sliderElement.addEventListener('touchend', up, true);
 }
 
 export function touchEventsDestroy(sliderElement: HTMLElement) {
@@ -51,4 +56,7 @@ export function touchEventsDestroy(sliderElement: HTMLElement) {
     // Mouse and touch move
     sliderElement.removeEventListener('mousemove', mouseMoveEvent, true);
     sliderElement.removeEventListener('touchmove', touchmoveEvent, true);
+    // Mouse up 
+    sliderElement.removeEventListener('mouseup', up, true);
+    sliderElement.removeEventListener('touchend', up, true);
 }
