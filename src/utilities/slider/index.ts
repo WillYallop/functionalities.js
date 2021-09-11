@@ -204,25 +204,37 @@ export default class Slider {
     }
     // 
     toSlide(slideIndex: number) {
-        let moveDirection;
-        if(this.config.loop) moveDirection = standardNavToSingle;
-        else moveDirection = loopNavToSingle;
+        if(typeof slideIndex != 'number') {
+            error(`Typeof "${ typeof slideIndex }" is not allow for the paramater on this function. It must be type "number".`);
+            return;
+        }
 
-        const moveDirectionFunc= moveDirection.bind(this);
-        const directionMoved = moveDirectionFunc(slideIndex);
-
-        // If config.afterSlide
-        if(this.config.afterSlide != undefined) this.config.afterSlide({
-            direction: directionMoved,
-            currentSlide: this.activeSlide,
-            totalSlides: this.slidesElementsArray.length,
-            lastDirection: this.lastDirection
-        });
-        // Set active
-        for(let i = 0; i < this.slidesElementsArray.length; i++) {
-            let slide = this.slidesElementsArray[i];
-            if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
-            if(slide.getAttribute('og-position') == this.activeSlide) slide.classList.add(this.config.classes.active);
+        // Verify slide number
+        if(slideIndex > this.slidesElementsArray.length || slideIndex < 0) {
+            error(`Cannot find slide with position of ${slideIndex}! Please make sure the slide number you are wanting to visit exists!`);
+            error(`Tip: this function counts slides starting from 0!`);
+        }
+        else {
+            let moveDirection;
+            if(!this.config.loop) moveDirection = standardNavToSingle;
+            else moveDirection = loopNavToSingle;
+    
+            const moveDirectionFunc= moveDirection.bind(this);
+            const directionMoved = moveDirectionFunc(slideIndex);
+    
+            // If config.afterSlide
+            if(this.config.afterSlide != undefined) this.config.afterSlide({
+                direction: directionMoved,
+                currentSlide: this.activeSlide,
+                totalSlides: this.slidesElementsArray.length,
+                lastDirection: this.lastDirection
+            });
+            // Set active
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                let slide = this.slidesElementsArray[i];
+                if(slide.classList.contains(this.config.classes.active)) slide.classList.remove(this.config.classes.active);
+                if(slide.getAttribute('og-position') == this.activeSlide) slide.classList.add(this.config.classes.active);
+            }
         }
     }
     // Stop the autoPlay slider

@@ -50,8 +50,22 @@ function loopRightOrDown() {
     }
 }
 function loopNavToSingle(targetIndex: number) {
-    
-    return 'left';
+    let index = targetIndex - 1;
+
+    this.wrapperElement.classList.add('wrapper-transition');
+    if(this.config.direction === 'horizontal') {
+
+        // Get slide with matching index - 1
+
+        // Transition it to the start
+
+        return 'right';
+    }
+    else {
+
+
+        return 'down'
+    }
 }
 
 // Standard
@@ -94,6 +108,7 @@ function moveRightOrDown() {
     }
 }
 function standardNavToSingle(targetIndex: number) {
+    let index = targetIndex - 1;
 
     return 'left';
 }
