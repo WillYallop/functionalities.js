@@ -165,7 +165,7 @@ Refer to the config types above to see what values can be used for each config k
 | toSlide | number: (index of the slide) | void | Calling this function will navigate to the slide index that is passed to it. This can be used to in your pagination implementation. This function will fire the beforeSlide and afterSlide callbacks, which you can learn more about in the seciton above. |
 | pause | N/A | promise |  Calling this function, if you have autoPlay in the config enabled: will pause the slider for automatically sliding. |
 | start | N/A | promise |  Calling this function, if you have autoPlay in the config enabled: will start the slider so it can automatically slide. This obviously only works if the slider has been paused previously, else will return an error. |
-| destory | N/A | void | Calling this function will destroy all eventListeners for this slider. If you are using this in a spa, its probably best to call this if navigating away from its page. |
+| destroy | N/A | void | Calling this function will destroy all eventListeners for this slider. If you are using this in a spa, its probably best to call this if navigating away from its page. |
 
 
 ### Limitations / Future Features / Notes
@@ -296,7 +296,7 @@ Refer to the config types above to see what values can be used for each config k
 
 | Functions | Required Paramaters | Returns | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| destory | N/A | void | Calling this function will destroy all eventListeners for this instance of sticky headers. |
+| destroy | N/A | void | Calling this function will destroy all eventListeners for this instance of sticky headers. |
 
 
 ### Limitations / Future Features / Notes

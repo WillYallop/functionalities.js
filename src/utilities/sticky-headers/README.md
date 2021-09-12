@@ -79,7 +79,7 @@ Refer to the config types above to see what values can be used for each config k
 
 | Functions | Required Paramaters | Returns | Description |
 | ----------- | ----------- | ----------- | ----------- |
-| destory | N/A | void | Calling this function will destroy all eventListeners for this instance of sticky headers. |
+| destroy | N/A | void | Calling this function will destroy all eventListeners for this instance of sticky headers. |
 
 
 ### Limitations / Future Features / Notes

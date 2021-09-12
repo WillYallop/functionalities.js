@@ -1,6 +1,6 @@
 {
   "name": "functionalities.js",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Functionalities is a utility library that offers functional components, to speed up development for the front end, while not impeeding your websites design.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",

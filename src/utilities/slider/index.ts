@@ -322,7 +322,7 @@ export default class Slider {
         });
     }
     // Destroy all event listeners
-    destory() {
+    destroy() {
         // Destroy resize
         if(this.config.perPage != 'auto') {
             window.removeEventListener('resize', this.adjustSlidesHandler);
