@@ -1,5 +1,10 @@
 # Functionalities.js Release Notes
 
+## v0.2.1
+> changes
+- [Build] Forgot to build in previous version...
+- [Other] Updated readme to contain more info and spiced it up with some images.
+
 ## v0.2.0
 > features
 - [Sliders]: Added new config.type option: fade.
