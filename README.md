@@ -1,4 +1,4 @@
-<img src="./images/banner.jpeg" style="width: 100%; margin-bottom: 20px;">
+<img src="https://github.com/WillYallop/functionalities.js/blob/master/images/banner.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 # Functionalities.js
 > Still under heavy development
@@ -9,7 +9,7 @@ Functionalities is a utility library for the frontend developers to help speed u
 
 ## Links
 - 📱 Demo: coming soon
-- 🔗 NPM: coming soon
+- 🔗 NPM: [https://www.npmjs.com/package/functionalities.js](https://www.npmjs.com/package/functionalities.js)
 - 👱 Author: [https://williamyallop.com](https://williamyallop.com)
 
 ## Current Utilities
@@ -29,7 +29,7 @@ npm i functionalities.js
 
 ## Utility: Sliders
 
-<img src="./images/sliders.jpeg" style="width: 100%;">
+<img src="https://github.com/WillYallop/functionalities.js/raw/master/images/sliders.jpeg" style="width: 100%;">
 
 > released
 
@@ -189,7 +189,7 @@ As this utility is still new and in development, there are a couple of limitatio
 
 ## Utility: Form/Input Validation 
 
-<img src="./images/forms.jpeg" style="width: 100%;">
+<img src="https://github.com/WillYallop/functionalities.js/raw/master/images/forms.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -199,7 +199,7 @@ Form/Input validation will be a simple solution to validating input fields based
 
 ## Utility: Accordions
 
-<img src="./images/accordions.jpeg" style="width: 100%;">
+<img src="https://github.com/WillYallop/functionalities.js/raw/master/images/accordions.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -209,7 +209,7 @@ Quickly get accordions up and running in a project. Just use our simple and felx
 
 ## Utility: Animations
 
-<img src="./images/animations.jpeg" style="width: 100%;">
+<img src="https://github.com/WillYallop/functionalities.js/blob/master/images/animations.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -221,7 +221,7 @@ If you dont want to use any of our presets for animations, just set the animatio
 
 ## Utility: Sticky Header
 
-<img src="./images/sticky-headers.jpeg" style="width: 100%;">
+<img src="https://github.com/WillYallop/functionalities.js/raw/master/images/sticky-headers.jpeg" style="width: 100%;">
 
 > coming soon
 
