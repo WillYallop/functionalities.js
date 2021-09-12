@@ -16,15 +16,16 @@
         &.wrapper-transition {
             transition-duration: 0.3s;
             transition-property: transform;   
+            .functionalities-slide {
+                transition-duration: 1s;
+                transition-property: opacity;  
+            }
         }
         .functionalities-slide {
             box-sizing: border-box;
             background-color: white;
-            // total gap coloums / visible slides
-            // min-width: calc(25% - 15px);
-            border: 1px solid red; // temp
-            &.active {
-                border: 1px solid green;
+            &.dont-animate {
+                transition: none;
             }
         }
     }

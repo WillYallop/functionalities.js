@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle, fadeBack, fadeForward, fadeToSingle } from './handler/movement';
 
 // Slider
 export default class Slider {
@@ -173,14 +173,14 @@ export default class Slider {
             if(direction === SlideDirection.rightDown) {
                 if(this.config.type === SliderType.standard) moveDirection = moveRightOrDown;
                 else if(this.config.type === SliderType.loop) moveDirection = loopRightOrDown;
-                else if(this.config.type === SliderType.fade) console.log('fade');
+                else if(this.config.type === SliderType.fade) moveDirection = fadeForward;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
             }
             // Left or Up slide
             else if (direction === SlideDirection.leftUp) {
                 if(this.config.type === SliderType.standard) moveDirection = moveLeftOrUp;
                 else if(this.config.type === SliderType.loop) moveDirection = loopLeftOrUp;
-                else if(this.config.type === SliderType.fade) console.log('fade');
+                else if(this.config.type === SliderType.fade) moveDirection = fadeBack;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
             }
             // ERROR
@@ -227,7 +227,7 @@ export default class Slider {
                 let moveDirection;
                 if(this.config.type === SliderType.standard) moveDirection = standardNavToSingle;
                 else if(this.config.type === SliderType.loop) moveDirection = loopNavToSingle;
-                else if(this.config.type === SliderType.fade) console.log('fade');
+                else if(this.config.type === SliderType.fade) moveDirection = fadeToSingle;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
 
                 const moveDirectionFunc= moveDirection.bind(this);

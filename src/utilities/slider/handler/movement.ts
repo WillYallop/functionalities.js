@@ -252,40 +252,130 @@ function standardNavToSingle(targetIndex: number) {
     else direction = false;
 
     this.activeSlide = targetIndex;
-
-    if(this.config.direction === 'horizontal') {
-        if(this.slidesElementsArray[this.activeSlide].offsetLeft <= this.wrapperElement.scrollWidth - this.sliderElement.offsetWidth) {
-            // Scroll horizontal 
-            this.applyWrapperOffsetX(this.activeSlide);
-            return 'right';
+    if(direction != false) { 
+        if(this.config.direction === 'horizontal') {
+            if(this.slidesElementsArray[this.activeSlide].offsetLeft <= this.wrapperElement.scrollWidth - this.sliderElement.offsetWidth) {
+                // Scroll horizontal 
+                this.applyWrapperOffsetX(this.activeSlide);
+                return 'right';
+            }
+            else {
+                // Stop horizontal
+                // translateX should be wrapper scrollWidth minus the    target slide width and slider width difference
+                let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetWidth - this.sliderElement.offsetWidth);
+                sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetWidth
+                let translateX = -Math.abs(this.wrapperElement.scrollWidth - sliderSlideDif);
+                // console.log(translateX);
+                applyStyle(this.wrapperElement, 'transform', `translateX(${translateX}px)`);
+                return 'right';
+            }
         }
         else {
-            // Stop horizontal
-            // translateX should be wrapper scrollWidth minus the    target slide width and slider width difference
-            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetWidth - this.sliderElement.offsetWidth);
-            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetWidth
-            let translateX = -Math.abs(this.wrapperElement.scrollWidth - sliderSlideDif);
-            // console.log(translateX);
-            applyStyle(this.wrapperElement, 'transform', `translateX(${translateX}px)`);
-            return 'right';
-        }
-    }
-    else {
-        if(this.slidesElementsArray[this.activeSlide].offsetTop <= this.wrapperElement.scrollHeight - this.sliderElement.offsetHeight) {
-            // Scroll vertical 
-            this.applyWrapperOffsetY(this.activeSlide);
-            return 'down'
-        }
-        else {
-            // Stop vertical
-            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetHeight - this.sliderElement.offsetHeight);
-            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetHeight
-            let translateY = -Math.abs(this.wrapperElement.scrollHeight - sliderSlideDif);
-            // console.log(translateX);
-            applyStyle(this.wrapperElement, 'transform', `translateY(${translateY}px)`);
-            return 'down'
+            if(this.slidesElementsArray[this.activeSlide].offsetTop <= this.wrapperElement.scrollHeight - this.sliderElement.offsetHeight) {
+                // Scroll vertical 
+                this.applyWrapperOffsetY(this.activeSlide);
+                return 'down'
+            }
+            else {
+                // Stop vertical
+                let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetHeight - this.sliderElement.offsetHeight);
+                sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetHeight
+                let translateY = -Math.abs(this.wrapperElement.scrollHeight - sliderSlideDif);
+                // console.log(translateX);
+                applyStyle(this.wrapperElement, 'transform', `translateY(${translateY}px)`);
+                return 'down'
+            }
         }
     }
 }
 
-export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle };
+// Fade
+function fadeBack() {
+    this.wrapperElement.classList.add('wrapper-transition');
+    if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - 1;
+    else this.activeSlide--;
+
+    this.wrapperElement.children[this.activeSlide].classList.remove('dont-animate');
+    this.wrapperElement.children[this.activeSlide].style.opacity = 1;
+
+    setTimeout(() => {
+        for(let i = 0; i < this.wrapperElement.children.length; i++) {
+            let child = this.wrapperElement.children[i];
+            if(child.getAttribute('og-position') != this.activeSlide) {
+                child.classList.remove('dont-animate');
+                child.style.opacity = 0;
+            }
+        }
+    }, 300);
+}
+function fadeForward() {
+    this.wrapperElement.classList.add('wrapper-transition');
+    if(this.activeSlide + 1 >= this.slidesElementsArray.length) this.activeSlide = 0;
+    else this.activeSlide++;
+
+    for(let i = 0; i < this.wrapperElement.children.length; i++) {
+        let child = this.wrapperElement.children[i];
+        if(this.activeSlide != 0) {
+            if(child.getAttribute('og-position') == this.activeSlide) {
+                child.classList.add('dont-animate');
+                child.style.opacity = 1;
+            }
+            else {
+                child.classList.remove('dont-animate');
+                child.style.opacity = 0;
+            }
+        }
+        else {
+            child.classList.remove('dont-animate');
+            child.style.opacity = 1;
+        }
+    }
+}
+function fadeToSingle(targetIndex: number) {
+    let direction;
+    if(targetIndex > this.activeSlide) direction = 'right';
+    else if (targetIndex < this.activeSlide) direction = 'left';
+    else direction = false;
+
+    this.activeSlide = targetIndex;
+
+    if(direction != false) {
+        this.wrapperElement.classList.add('wrapper-transition');
+        if(direction === 'right') {
+            for(let i = 0; i < this.wrapperElement.children.length; i++) {
+                let child = this.wrapperElement.children[i];
+                if(this.activeSlide != 0) {
+                    if(child.getAttribute('og-position') == this.activeSlide) {
+                        child.classList.add('dont-animate');
+                        child.style.opacity = 1;
+                    }
+                    else {
+                        child.classList.remove('dont-animate');
+                        child.style.opacity = 0;
+                    }
+                }
+                else {
+                    child.classList.remove('dont-animate');
+                    child.style.opacity = 1;
+                }
+            }
+        }
+        else if(direction === 'left'){
+
+            this.wrapperElement.children[this.activeSlide].classList.remove('dont-animate');
+            this.wrapperElement.children[this.activeSlide].style.opacity = 1;
+        
+            setTimeout(() => {
+                for(let i = 0; i < this.wrapperElement.children.length; i++) {
+                    let child = this.wrapperElement.children[i];
+                    if(child.getAttribute('og-position') != this.activeSlide) {
+                        child.classList.remove('dont-animate');
+                        child.style.opacity = 0;
+                    }
+                }
+            }, 300);
+        }
+    }
+}
+
+export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle, fadeBack, fadeForward, fadeToSingle };
