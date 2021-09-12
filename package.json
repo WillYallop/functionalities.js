@@ -12,10 +12,15 @@
     "dev": "webpack --mode=development --watch"
   },
   "keywords": [
-    "Slider"
+    "utilities",
+    "slider",
+    "form-validation",
+    "accordion",
+    "animations",
+    "sticky-headers"
   ],
   "author": "William Yallop",
-  "license": "ISC",
+  "license": "MIT License",
   "devDependencies": {
     "@types/node": "^16.7.9",
     "@types/webpack": "^5.28.0",
