@@ -1,7 +1,7 @@
 <img src="https://github.com/WillYallop/functionalities.js/blob/master/images/banner.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 # Functionalities.js
-> Still under heavy development - v0.3.0
+> Still under heavy development - v0.3.1
 
 If you are looking for a library that gives you styled, prebuilt components you are in the wrong place!
 
@@ -33,7 +33,7 @@ npm i functionalities.js
 
 > released
 
-Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. This is not the final build, but is in a very usable state. 
+Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. 
 
 ### Features
 
