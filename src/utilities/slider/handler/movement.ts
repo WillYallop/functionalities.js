@@ -62,55 +62,79 @@ function loopRightOrDown() {
 
 
 function loopNavToSingle(targetIndex: number) {
-    console.clear()
-    this.wrapperElement.classList.add('wrapper-transition');
 
-    // Get the target slides index
-    var targetSlideIndex;
-    for(let i = 0; i < this.slidesElementsArray.length; i++) {
-        let currentSlide = this.slidesElementsArray[i];
-        let pos = parseInt(currentSlide.getAttribute('og-position'));
-        if(pos === targetIndex) targetSlideIndex = i;
-    }
-    
     // Work out the direction and how many we need to travel
     let direction;
 
-    if(targetSlideIndex > this.activeSlide) direction = 'right';
-    else if (targetSlideIndex < this.activeSlide) direction = 'left';
+    if(targetIndex > this.activeSlide) direction = 'right';
+    else if (targetIndex < this.activeSlide) direction = 'left';
     else direction = false;
 
     this.activeSlide = targetIndex;
 
     if(direction != false) {
-        let offsetLeft = -Math.abs(this.slidesElementsArray[targetSlideIndex].offsetLeft);
-        applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+
+        let orderArray = [];
+        let start = targetIndex;
+        let overflow = 0;
+        for(let i = 0; i < this.slidesElementsArray.length; i++) {
+            if(start < this.slidesElementsArray.length) orderArray.push(start++);
+            else orderArray.push(overflow++);
+        }
     
-        setTimeout(() => {
-            this.wrapperElement.classList.remove('wrapper-transition');
-            applyStyle(this.wrapperElement, 'transform', `translateX(0px)`);
+        // Set slides order based on orderArray values
+        let tempArray = [];
+        for(let i = 0; i < orderArray.length; i++) {
+            let slide = this.slidesElementsArray.find( x => parseInt(x.getAttribute('og-position')) === orderArray[i]);
+            tempArray.push(slide);
+        }
     
-            let orderArray = [];
-            let start = targetIndex;
-            let overflow = 0;
-            for(let i = 0; i < this.slidesElementsArray.length; i++) {
-                if(start < this.slidesElementsArray.length) orderArray.push(start++);
-                else orderArray.push(overflow++);
+        if(direction === 'right') {
+            this.wrapperElement.classList.add('wrapper-transition');
+
+            if(this.config.direction === 'horizontal') { 
+                let offsetLeft = -Math.abs(tempArray[0].offsetLeft);
+                applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
             }
-        
-            // Set slides order based on orderArray values
-            let tempArray = [];
-            for(let i = 0; i < orderArray.length; i++) {
-                let slide = this.slidesElementsArray.find( x => parseInt(x.getAttribute('og-position')) === orderArray[i]);
-                tempArray.push(slide);
+            else {
+                let offsetTop = -Math.abs(tempArray[0].offsetTop);
+                applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
             }
+
+            setTimeout(() => {
+                this.wrapperElement.classList.remove('wrapper-transition');
+                applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+                // Reorder elements
+                for(let i = 0; i < tempArray.length; i++) {
+                    this.wrapperElement.append(tempArray[i]);
+                }
+            }, 300);
+
+        }
+        else if(direction === 'left'){
+
             // Reorder elements
             for(let i = 0; i < tempArray.length; i++) {
                 this.wrapperElement.append(tempArray[i]);
             }
 
-            this.slidesElementsArray = tempArray;
-        }, 300);
+            this.wrapperElement.classList.remove('wrapper-transition');
+
+            if(this.config.direction === 'horizontal') { 
+                let offsetLeft = -Math.abs(tempArray[1].offsetLeft);
+                applyStyle(this.wrapperElement, 'transform', `translateX(${offsetLeft}px)`);
+            }
+            else {
+                let offsetTop = -Math.abs(tempArray[1].offsetTop);
+                applyStyle(this.wrapperElement, 'transform', `translateY(${offsetTop}px)`);
+            }
+
+            setTimeout(() => {
+                this.wrapperElement.classList.add('wrapper-transition');
+                applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+            });
+        }
+        this.slidesElementsArray = tempArray;
     }
 
 }
