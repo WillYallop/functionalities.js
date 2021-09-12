@@ -160,9 +160,16 @@ This isnt the final list of functions, for example a toSlide function is in the 
 
 As this utility is still new and in development, there are a couple of limitations and missing features that we plan to work on.
 
+> features
+- [Feature]: Config will be added to support adding more keys to the controls keys navigation option.
+- [Examples]: A documentation site is in the works, which will contain a variety of exmaples on different configurations.
+
+> notes
 - [Note]: When using the ```config.type: 'fade'``` a default height will be set to the slider component with the class ```fixed-height```. This is because the fade type makes the slides absolute to the wrapper so they can be overlayed on top of each other, and so needs a defined height to work. This should be overwritten to your liking.
 - [Note]: When using the ```config.direction: 'vertical'``` a default height will be set tot he slider component with the class ```fixed-height```. This sldier type needs a defined height. This should be overwritten to your liking.
 
+> limitations
+- [Limitations]: As designed, this doesnt come with any pagination or arrow navigation prebuilt blocks, so we dont interfere with your sites design. We supply the functions you will need to add these.
 
 <br>
 
