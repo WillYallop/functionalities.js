@@ -7,8 +7,9 @@ const mouseDownEvent = (e) => {prevPos = [e.clientX, e.clientY], unlocked = true
 const touchStartEvent = (e) => {prevPos = [e.changedTouches[0].screenX, e.changedTouches[0].screenY], unlocked = true};
 
 // Mouse and touch move
-const mouseMoveEvent = (e) => move(e.clientX, e.clientY);
-const touchmoveEvent = (e) => move(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
+    
+const mouseMoveEvent = (e) => { e.preventDefault(); move(e.clientX, e.clientY);}
+const touchmoveEvent = (e) => {e.preventDefault(); move(e.changedTouches[0].screenX, e.changedTouches[0].screenY);}
 const move = (x: number, y: number) => {
     if(unlocked) {
         unlocked = false;

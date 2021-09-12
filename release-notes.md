@@ -9,6 +9,7 @@
 
 > bug fixes
 - [Sliders]: Fixed issue where infinite movement handlers would transition right twice due to not removing old animation event listener.
+- [Sliders]: Added preventDefault on touch/mouse events for navigation to stop the page scrolling if the user is trying to move the slider.
 
 > changes
 - [Sliders]: Reworked how slider transition types are handled. Now instead of only having loop true/false. We now have config.types where the slider type can be specified.
