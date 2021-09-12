@@ -15,6 +15,7 @@ export default class Slider {
     arrowEventsInitiate;
     wheelEventsInitiate;
     adjustSlidesHandler: () => void;
+    clickEventHandler;
     activeSlide: number;
     sliderLoop;
     lastSlide: Date;
@@ -153,6 +154,15 @@ export default class Slider {
                 }
             });
         }
+
+
+        // this.config.clickEvent
+        if(this.config.clickEvent != undefined) {
+            this.clickEventHandler = clickEventHandler.bind(this);
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                this.slidesElementsArray[i].addEventListener('click', this.clickEventHandler, true);
+            }
+        }
     }
 
     // Trigger slide
@@ -162,7 +172,7 @@ export default class Slider {
         if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
             // If config.beforeSlide
             if(this.config.beforeSlide != undefined) this.config.beforeSlide({
-                currentSlide: this.activeSlide,
+                currentSlideIndex: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
             });
@@ -194,7 +204,7 @@ export default class Slider {
 
             // If config.afterSlide
             if(this.config.afterSlide != undefined) this.config.afterSlide({
-                currentSlide: this.activeSlide,
+                currentSlideIndex: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
             });
@@ -219,7 +229,7 @@ export default class Slider {
 
                 // If config.beforeSlide
                 if(this.config.beforeSlide != undefined) this.config.beforeSlide({
-                    currentSlide: this.activeSlide,
+                    currentSlideIndex: this.activeSlide,
                     totalSlides: this.slidesElementsArray.length,
                     lastDirection: this.lastDirection
                 });
@@ -242,7 +252,7 @@ export default class Slider {
 
                 // If config.afterSlide
                 if(this.config.afterSlide != undefined) this.config.afterSlide({
-                    currentSlide: this.activeSlide,
+                    currentSlideIndex: this.activeSlide,
                     totalSlides: this.slidesElementsArray.length,
                     lastDirection: this.lastDirection
                 });
@@ -314,6 +324,8 @@ export default class Slider {
     }
     // Destroy all event listeners
     destory() {
+        console.clear();
+        console.log('DESTROY')
         // Destroy resize
         if(this.config.perPage != 'auto') {
             window.removeEventListener('resize', this.adjustSlidesHandler);
@@ -324,6 +336,13 @@ export default class Slider {
         if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
         // Mouse wheel event
         if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
+
+        // this.config.clickEvent
+        if(this.config.clickEvent != undefined) {
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                this.slidesElementsArray[i].removeEventListener('click', this.clickEventHandler, true);
+            }
+        }
     }
 
     // Apply wrapper offset for x & y
@@ -390,6 +409,13 @@ export default class Slider {
 
         return hasError;
     }
+}
+
+function clickEventHandler() {
+    this.config.clickEvent({
+        currentSlideIndex: this.activeSlide,
+        totalSlides: this.slidesElementsArray.length
+    });
 }
 
 // Add fixed classes to apply basic style to the slider
@@ -461,7 +487,6 @@ function adjustSlidesFade() {
 
 
 
-
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
 type ConfigDirectionType = 'vertical' | 'horizontal';
@@ -492,18 +517,17 @@ interface Config {
         slide?: string
     },
     beforeSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
     }) => void
     afterSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
     }) => void
     clickEvent?: (response: {
-        currentSlide: number,
-        totalSlides: number,
-        lastDirection: string
+        currentSlideIndex: number,
+        totalSlides: number
     }) => void
 };
