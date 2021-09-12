@@ -18,11 +18,22 @@ Functionalities is a utility library for the frontend developers to help speed u
 
 ## Utility: Sliders
 
-<img src="./images/sliders.jpeg" style="width: 100%; margin-bottom: 10px;">
+<img src="./images/sliders.jpeg" style="width: 100%;">
 
 > released
 
 Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. This is not the final build, but is in a very usable state. 
+
+### Features
+
+- Supports vertical and horizontal sliders.
+- Can choose between slider types: loop, infinite and fade.
+- Can programatically slide in both directions.
+- Can programatically slide to a specific slide.
+- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
+- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
+- Has callback functions for before and after slide.
+- Has callback function for slide click events.
 
 ### Example
 
@@ -64,17 +75,6 @@ const sliderInstance = new Slider('sliderExample', {
     }
 });
 ```
-
-### Features
-
-- Supports vertical and horizontal sliders.
-- Can choose between slider types: loop, infinite and fade.
-- Can programatically slide in both directions.
-- Can programatically slide to a specific slide.
-- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
-- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
-- Has callback functions for before and after slide.
-- Has callback function for slide click events.
 
 ### Config - Types
 
@@ -178,7 +178,7 @@ As this utility is still new and in development, there are a couple of limitatio
 
 ## Utility: Form/Input Validation 
 
-<img src="./images/forms.jpeg" style="width: 100%; margin-bottom: 10px;">
+<img src="./images/forms.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -188,7 +188,7 @@ Form/Input validation will be a simple solution to validating input fields based
 
 ## Utility: Accordions
 
-<img src="./images/accordions.jpeg" style="width: 100%; margin-bottom: 10px;">
+<img src="./images/accordions.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -198,7 +198,7 @@ Quickly get accordions up and running in a project. Just use our simple and felx
 
 ## Utility: Animations
 
-<img src="./images/animations.jpeg" style="width: 100%; margin-bottom: 10px;">
+<img src="./images/animations.jpeg" style="width: 100%;">
 
 > coming soon
 
@@ -210,7 +210,7 @@ If you dont want to use any of our presets for animations, just set the animatio
 
 ## Utility: Sticky Header
 
-<img src="./images/sticky-headers.jpeg" style="width: 100%; margin-bottom: 10px;">
+<img src="./images/sticky-headers.jpeg" style="width: 100%;">
 
 > coming soon
 

@@ -5,6 +5,17 @@
 
 Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. This is not the final build, but is in a very usable state. 
 
+### Features
+
+- Supports vertical and horizontal sliders.
+- Can choose between slider types: loop, infinite and fade.
+- Can programatically slide in both directions.
+- Can programatically slide to a specific slide.
+- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
+- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
+- Has callback functions for before and after slide.
+- Has callback function for slide click events.
+
 ### Example
 
 Here is a basic exmaple of how to set up a slider. Feel free to conifgure it how you like, find out more about the config bellow.
@@ -45,17 +56,6 @@ const sliderInstance = new Slider('sliderExample', {
     }
 });
 ```
-
-### Features
-
-- Supports vertical and horizontal sliders.
-- Can choose between slider types: loop, infinite and fade.
-- Can programatically slide in both directions.
-- Can programatically slide to a specific slide.
-- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
-- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
-- Has callback functions for before and after slide.
-- Has callback function for slide click events.
 
 ### Config - Types
 
