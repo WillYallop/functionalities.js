@@ -1,4 +1,4 @@
-<img src="./screenshot.jpeg" style="width: 100%; margin-bottom: 20px;">
+<img src="./images/banner.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 # Functionalities.js
 > Still under heavy development
@@ -7,6 +7,11 @@ If you are looking for a library that gives you styled, prebuilt components you 
 
 Functionalities is a utility library for the frontend developers to help speed up development, and not impeed your websites design. It aims to offer solutions for all the common components such as sliders, forms, accordions and more, that you build in your frontend applications over and over again, but with one important fact: they only contain necessary CSS and core functions so if need be you can add to the utilities however you like.
 
+## Links
+- 📱 Demo: coming soon
+- 🔗 NPM: coming soon
+- 👱 Author: [https://williamyallop.com](https://williamyallop.com)
+
 ## Current Utilities
 - Sliders [released]
 - Form/Input Validation [coming soon]
@@ -14,12 +19,32 @@ Functionalities is a utility library for the frontend developers to help speed u
 - Animations [coming soon]
 - Sticky Header [coming soon]
 
+## Instal via NPM
+
+```sh
+npm i functionalities.js
+```
+
 <br>
 
 ## Utility: Sliders
+
+<img src="./images/sliders.jpeg" style="width: 100%;">
+
 > released
 
 Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. This is not the final build, but is in a very usable state. 
+
+### Features
+
+- Supports vertical and horizontal sliders.
+- Can choose between slider types: loop, infinite and fade.
+- Can programatically slide in both directions.
+- Can programatically slide to a specific slide.
+- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
+- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
+- Has callback functions for before and after slide.
+- Has callback function for slide click events.
 
 ### Example
 
@@ -61,17 +86,6 @@ const sliderInstance = new Slider('sliderExample', {
     }
 });
 ```
-
-### Features
-
-- Supports vertical and horizontal sliders.
-- Can choose between slider types: loop, infinite and fade.
-- Can programatically slide in both directions.
-- Can programatically slide to a specific slide.
-- Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
-- Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
-- Has callback functions for before and after slide.
-- Has callback function for slide click events.
 
 ### Config - Types
 
@@ -174,23 +188,41 @@ As this utility is still new and in development, there are a couple of limitatio
 <br>
 
 ## Utility: Form/Input Validation 
+
+<img src="./images/forms.jpeg" style="width: 100%;">
+
 > coming soon
 
 Form/Input validation will be a simple solution to validating input fields based on a specified config. 
 
+<br>
+
 ## Utility: Accordions
+
+<img src="./images/accordions.jpeg" style="width: 100%;">
+
 > coming soon
 
 Quickly get accordions up and running in a project. Just use our simple and felxible boiler plate, pass the parents ID into a new instance of accordions, configure it how you like or use the default config and you're done!
 
+<br>
+
 ## Utility: Animations
+
+<img src="./images/animations.jpeg" style="width: 100%;">
+
 > coming soon
 
 Functionalities animations utility, makes adding animations to your elements, easier than ever. Create a new instance of animations, pass it some config where you will specify what attribute name and link the animation type you want to associate it with. Then all you have to do is add that attribute name to the elements you want it to apply on and the the utility will do the rest.
 
 If you dont want to use any of our presets for animations, just set the animation type to false for that attribute name, and the library will add a class to those elements where you can then create your custom animation in your CSS.
 
+<br>
+
 ## Utility: Sticky Header
+
+<img src="./images/sticky-headers.jpeg" style="width: 100%;">
+
 > coming soon
 
 Sticky headers is as it sounds. Just add an ID to your header, create a new instance of the sticky header utility, pass it some config or use the defaults. This utility only add functionality. No CSS! This is to ensure flexibility.
