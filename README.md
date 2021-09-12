@@ -7,12 +7,23 @@ If you are looking for a library that gives you styled, prebuilt components you 
 
 Functionalities is a utility library for the frontend developers to help speed up development, and not impeed your websites design. It aims to offer solutions for all the common components such as sliders, forms, accordions and more, that you build in your frontend applications over and over again, but with one important fact: they only contain necessary CSS and core functions so if need be you can add to the utilities however you like.
 
+## Links
+- 📱 Demo: coming soon
+- 🔗 NPM: coming soon
+- 👱 Author: [https://williamyallop.com](https://williamyallop.com)
+
 ## Current Utilities
 - Sliders [released]
 - Form/Input Validation [coming soon]
 - Accordions [coming soon]
 - Animations [coming soon]
 - Sticky Header [coming soon]
+
+## Instal via NPM
+
+```sh
+npm i functionalities.js
+```
 
 <br>
 
