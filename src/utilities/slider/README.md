@@ -46,7 +46,7 @@ const sliderInstance = new Slider('sliderExample', {
     autoPlay: true,
     gap: 10,
     slideDirection: 'rightDown',
-    type: 'infinite,
+    type: 'infinite',
     direction: 'horizontal',
     beforeSlide: (data) => {
         console.log('before', data);
@@ -129,8 +129,6 @@ Refer to the config types above to see what values can be used for each config k
 
 ### Functions
 
-This isnt the final list of functions, for example a toSlide function is in the works.
-
 | Functions | Required Paramaters | Returns | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | triggerSlide | string: 'rightDown' or 'leftUp' | void |  As it sounds: calling this will trigger the slider to slide in the direction you specify. This function also fires the beforeSlide and afterSlide callbacks, which you can learn more about in the seciton above. |
@@ -141,8 +139,6 @@ This isnt the final list of functions, for example a toSlide function is in the 
 
 
 ### Limitations / Future Features / Notes
-
-As this utility is still new and in development, there are a couple of limitations and missing features that we plan to work on.
 
 > features
 - [Feature]: Config will be added to support adding more keys to the controls keys navigation option.
