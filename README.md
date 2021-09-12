@@ -16,10 +16,11 @@ Functionalities is a utility library for the frontend developers to help speed u
 
 <br>
 
-<img src="./images/sliders.jpeg" style="width: 100%; margin-bottom: 20px;">
-
 ## Utility: Sliders
 > released
+
+<img src="./images/sliders.jpeg" style="width: 100%; margin-bottom: 20px;">
+
 
 Funcitonalities Sliders is a lightweight and very flexible slider utility. It has a lot of config so you can get it setup how you like, and we only serve the bare minimum of CSS so you can incorporate it into your design however you like. This is not the final build, but is in a very usable state. 
 
@@ -175,33 +176,39 @@ As this utility is still new and in development, there are a couple of limitatio
 
 <br>
 
-<img src="./images/forms.jpeg" style="width: 100%; margin-bottom: 20px;">
-
 ## Utility: Form/Input Validation 
 > coming soon
 
+<img src="./images/forms.jpeg" style="width: 100%; margin-bottom: 20px;">
+
 Form/Input validation will be a simple solution to validating input fields based on a specified config. 
 
-<img src="./images/accordions.jpeg" style="width: 100%; margin-bottom: 20px;">
+<br>
 
 ## Utility: Accordions
 > coming soon
 
+<img src="./images/accordions.jpeg" style="width: 100%; margin-bottom: 20px;">
+
 Quickly get accordions up and running in a project. Just use our simple and felxible boiler plate, pass the parents ID into a new instance of accordions, configure it how you like or use the default config and you're done!
 
-<img src="./images/animations.jpeg" style="width: 100%; margin-bottom: 20px;">
+<br>
 
 ## Utility: Animations
 > coming soon
+
+<img src="./images/animations.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 Functionalities animations utility, makes adding animations to your elements, easier than ever. Create a new instance of animations, pass it some config where you will specify what attribute name and link the animation type you want to associate it with. Then all you have to do is add that attribute name to the elements you want it to apply on and the the utility will do the rest.
 
 If you dont want to use any of our presets for animations, just set the animation type to false for that attribute name, and the library will add a class to those elements where you can then create your custom animation in your CSS.
 
-<img src="./images/sticky-headers.jpeg" style="width: 100%; margin-bottom: 20px;">
+<br>
 
 ## Utility: Sticky Header
 > coming soon
+
+<img src="./images/sticky-headers.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 Sticky headers is as it sounds. Just add an ID to your header, create a new instance of the sticky header utility, pass it some config or use the defaults. This utility only add functionality. No CSS! This is to ensure flexibility.
 
