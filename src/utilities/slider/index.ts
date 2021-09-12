@@ -376,8 +376,12 @@ export default class Slider {
         if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
+        // config.beforeSlide
+        if(typeof this.config.beforeSlide != 'function') error(`Typeof "${typeof this.config.beforeSlide }" is not allow for "beforeSlide". It must be type "function"!`), hasError = true;
         // config.afterSlideCB
         if(typeof this.config.afterSlide != 'function') error(`Typeof "${typeof this.config.afterSlide }" is not allow for "afterSlide". It must be type "function"!`), hasError = true;
+        // config.clickEvent
+        if(typeof this.config.clickEvent != 'function') error(`Typeof "${typeof this.config.clickEvent }" is not allow for "clickEvent". It must be type "function"!`), hasError = true;
         // Verify Elements
         if(!this.sliderElement) error(`Cannot find slider element of ID: "${this.config.id}"!`), hasError = true;
         if(!this.wrapperElement) error(`Cannot find slider wrapper element of Class: "${this.config.classes.wrapper}"!`), hasError = true;
@@ -493,6 +497,11 @@ interface Config {
         lastDirection: string
     }) => void
     afterSlide?: (response: {
+        currentSlide: number,
+        totalSlides: number,
+        lastDirection: string
+    }) => void
+    clickEvent?: (response: {
         currentSlide: number,
         totalSlides: number,
         lastDirection: string
