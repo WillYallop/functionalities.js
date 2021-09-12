@@ -15,6 +15,7 @@ export default class Slider {
     arrowEventsInitiate;
     wheelEventsInitiate;
     adjustSlidesHandler: () => void;
+    clickEventHandler;
     activeSlide: number;
     sliderLoop;
     lastSlide: Date;
@@ -153,6 +154,15 @@ export default class Slider {
                 }
             });
         }
+
+
+        // this.config.clickEvent
+        if(this.config.clickEvent != undefined) {
+            this.clickEventHandler = clickEventHandler.bind(this);
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                this.slidesElementsArray[i].addEventListener('click', this.clickEventHandler, true);
+            }
+        }
     }
 
     // Trigger slide
@@ -162,7 +172,7 @@ export default class Slider {
         if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
             // If config.beforeSlide
             if(this.config.beforeSlide != undefined) this.config.beforeSlide({
-                currentSlide: this.activeSlide,
+                currentSlideIndex: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
             });
@@ -194,7 +204,7 @@ export default class Slider {
 
             // If config.afterSlide
             if(this.config.afterSlide != undefined) this.config.afterSlide({
-                currentSlide: this.activeSlide,
+                currentSlideIndex: this.activeSlide,
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
             });
@@ -219,7 +229,7 @@ export default class Slider {
 
                 // If config.beforeSlide
                 if(this.config.beforeSlide != undefined) this.config.beforeSlide({
-                    currentSlide: this.activeSlide,
+                    currentSlideIndex: this.activeSlide,
                     totalSlides: this.slidesElementsArray.length,
                     lastDirection: this.lastDirection
                 });
@@ -242,7 +252,7 @@ export default class Slider {
 
                 // If config.afterSlide
                 if(this.config.afterSlide != undefined) this.config.afterSlide({
-                    currentSlide: this.activeSlide,
+                    currentSlideIndex: this.activeSlide,
                     totalSlides: this.slidesElementsArray.length,
                     lastDirection: this.lastDirection
                 });
@@ -314,6 +324,8 @@ export default class Slider {
     }
     // Destroy all event listeners
     destory() {
+        console.clear();
+        console.log('DESTROY')
         // Destroy resize
         if(this.config.perPage != 'auto') {
             window.removeEventListener('resize', this.adjustSlidesHandler);
@@ -324,6 +336,13 @@ export default class Slider {
         if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
         // Mouse wheel event
         if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
+
+        // this.config.clickEvent
+        if(this.config.clickEvent != undefined) {
+            for(let i = 0; i < this.slidesElementsArray.length; i++) {
+                this.slidesElementsArray[i].removeEventListener('click', this.clickEventHandler, true);
+            }
+        }
     }
 
     // Apply wrapper offset for x & y
@@ -376,8 +395,12 @@ export default class Slider {
         if(typeof this.config.classes.slider != 'string') error(`Typeof "${typeof this.config.classes.slider }" is not allow for "classes.slider". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.wrapper != 'string') error(`Typeof "${typeof this.config.classes.wrapper }" is not allow for "classes.wrapper". It must be type "string"!`), hasError = true;
         if(typeof this.config.classes.slide != 'string') error(`Typeof "${typeof this.config.classes.slide }" is not allow for "classes.slide". It must be type "string"!`), hasError = true;
+        // config.beforeSlide
+        if(typeof this.config.beforeSlide != 'function') error(`Typeof "${typeof this.config.beforeSlide }" is not allow for "beforeSlide". It must be type "function"!`), hasError = true;
         // config.afterSlideCB
         if(typeof this.config.afterSlide != 'function') error(`Typeof "${typeof this.config.afterSlide }" is not allow for "afterSlide". It must be type "function"!`), hasError = true;
+        // config.clickEvent
+        if(typeof this.config.clickEvent != 'function') error(`Typeof "${typeof this.config.clickEvent }" is not allow for "clickEvent". It must be type "function"!`), hasError = true;
         // Verify Elements
         if(!this.sliderElement) error(`Cannot find slider element of ID: "${this.config.id}"!`), hasError = true;
         if(!this.wrapperElement) error(`Cannot find slider wrapper element of Class: "${this.config.classes.wrapper}"!`), hasError = true;
@@ -386,6 +409,13 @@ export default class Slider {
 
         return hasError;
     }
+}
+
+function clickEventHandler() {
+    this.config.clickEvent({
+        currentSlideIndex: this.activeSlide,
+        totalSlides: this.slidesElementsArray.length
+    });
 }
 
 // Add fixed classes to apply basic style to the slider
@@ -457,7 +487,6 @@ function adjustSlidesFade() {
 
 
 
-
 // Type definitions - only import facing ones
 enum ConfigDirection { vertical = 'vertical', horizontal = 'horizontal' };
 type ConfigDirectionType = 'vertical' | 'horizontal';
@@ -488,13 +517,17 @@ interface Config {
         slide?: string
     },
     beforeSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
     }) => void
     afterSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
+    }) => void
+    clickEvent?: (response: {
+        currentSlideIndex: number,
+        totalSlides: number
     }) => void
 };
