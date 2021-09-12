@@ -1,7 +1,7 @@
 import applyStyle from '../../../shared/apply-style';
 
-// Loop
-function loopLeftOrUp() {
+// Infinite
+function infiniteLeftOrUp() {
     this.wrapperElement.prepend(this.slidesElementsArray[this.slidesElementsArray.length - 1])
     this.slidesElementsArray.unshift(this.slidesElementsArray.pop());
 
@@ -33,7 +33,7 @@ function loopLeftOrUp() {
         return 'up'
     }
 }
-function loopRightOrDown() {
+function infiniteRightOrDown() {
     this.wrapperElement.classList.add('wrapper-transition');
     // Do transition first
     if(this.config.direction === 'horizontal') {
@@ -58,7 +58,7 @@ function loopRightOrDown() {
     if(this.config.direction === 'horizontal') return 'right';
     else return 'down'
 }
-function loopNavToSingle(targetIndex: number) {
+function infiniteNavToSingle(targetIndex: number) {
 
     // Work out the direction and how many we need to travel
     let direction;
@@ -136,7 +136,7 @@ function loopNavToSingle(targetIndex: number) {
 
 }
 
-// Standard
+// Loop
 function moveLeftOrUp() {
     if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - 1;
     else this.activeSlide--;
@@ -244,7 +244,7 @@ function moveRightOrDown() {
         }
     }
 }
-function standardNavToSingle(targetIndex: number) {
+function loopNavToSingle(targetIndex: number) {
     // Work out the direction and how many we need to travel
     let direction;
     if(targetIndex > this.activeSlide) direction = 'right';
@@ -378,4 +378,4 @@ function fadeToSingle(targetIndex: number) {
     }
 }
 
-export { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle, fadeBack, fadeForward, fadeToSingle };
+export { moveLeftOrUp, moveRightOrDown, loopNavToSingle, infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, fadeBack, fadeForward, fadeToSingle };

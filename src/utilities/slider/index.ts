@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle, fadeBack, fadeForward, fadeToSingle } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, loopNavToSingle, infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, fadeBack, fadeForward, fadeToSingle } from './handler/movement';
 
 // Slider
 export default class Slider {
@@ -35,7 +35,7 @@ export default class Slider {
             direction: ConfigDirection.horizontal,
             autoPlay: true,
             slideDirection: SlideDirection.rightDown,
-            type: SliderType.standard,
+            type: SliderType.infinite,
             gap: 20,
             speed: 2000,
             controls: {
@@ -85,7 +85,7 @@ export default class Slider {
 
         // Adjust slides based on config.perPage so everything is translated and overflowing correctly
         if(this.config.perPage != 'auto') {
-            if(this.config.type === SliderType.standard || this.config.type === SliderType.loop) {
+            if(this.config.type === SliderType.loop || this.config.type === SliderType.infinite) {
                 this.adjustSlidesHandler = adjustSlides.bind(this);
                 this.adjustSlidesHandler();
             }
@@ -155,7 +155,6 @@ export default class Slider {
             });
         }
 
-
         // this.config.clickEvent
         if(this.config.clickEvent != undefined) {
             this.clickEventHandler = clickEventHandler.bind(this);
@@ -181,15 +180,15 @@ export default class Slider {
             // Right or Down slide
             this.lastDirection = direction;
             if(direction === SlideDirection.rightDown) {
-                if(this.config.type === SliderType.standard) moveDirection = moveRightOrDown;
-                else if(this.config.type === SliderType.loop) moveDirection = loopRightOrDown;
+                if(this.config.type === SliderType.loop) moveDirection = moveRightOrDown;
+                else if(this.config.type === SliderType.infinite) moveDirection = infiniteRightOrDown;
                 else if(this.config.type === SliderType.fade) moveDirection = fadeForward;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
             }
             // Left or Up slide
             else if (direction === SlideDirection.leftUp) {
-                if(this.config.type === SliderType.standard) moveDirection = moveLeftOrUp;
-                else if(this.config.type === SliderType.loop) moveDirection = loopLeftOrUp;
+                if(this.config.type === SliderType.loop) moveDirection = moveLeftOrUp;
+                else if(this.config.type === SliderType.infinite) moveDirection = infiniteLeftOrUp;
                 else if(this.config.type === SliderType.fade) moveDirection = fadeBack;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
             }
@@ -235,8 +234,8 @@ export default class Slider {
                 });
 
                 let moveDirection;
-                if(this.config.type === SliderType.standard) moveDirection = standardNavToSingle;
-                else if(this.config.type === SliderType.loop) moveDirection = loopNavToSingle;
+                if(this.config.type === SliderType.loop) moveDirection = loopNavToSingle;
+                else if(this.config.type === SliderType.infinite) moveDirection = infiniteNavToSingle;
                 else if(this.config.type === SliderType.fade) moveDirection = fadeToSingle;
                 else error(`Cannot triger slide with config.type of ${this.config.type}!`);
 
@@ -324,8 +323,6 @@ export default class Slider {
     }
     // Destroy all event listeners
     destory() {
-        console.clear();
-        console.log('DESTROY')
         // Destroy resize
         if(this.config.perPage != 'auto') {
             window.removeEventListener('resize', this.adjustSlidesHandler);
@@ -377,7 +374,7 @@ export default class Slider {
         else if(this.config.direction != ConfigDirection.vertical && this.config.direction != ConfigDirection.horizontal) error(`"direction" can only be equal to ${ConfigDirection.vertical} or ${ConfigDirection.horizontal}!`), hasError = true;
         // config.type
         if(typeof this.config.type != 'string') error(`Typeof "${typeof this.config.type }" is not allow for "type". It must be type "string"!`), hasError = true;
-        else if(this.config.type != SliderType.standard && this.config.type != SliderType.loop && this.config.type != SliderType.fade) error(`"type" can only be equal to ${SliderType.standard}, ${SliderType.loop} or ${SliderType.fade}!`), hasError = true;
+        else if(this.config.type != SliderType.loop && this.config.type != SliderType.infinite && this.config.type != SliderType.fade) error(`"type" can only be equal to ${SliderType.loop}, ${SliderType.infinite} or ${SliderType.fade}!`), hasError = true;
         // config.autoPlay
         if(typeof this.config.autoPlay != 'boolean') error(`Typeof "${typeof this.config.autoPlay }" is not allow for "autoPlay". It must be type "boolean"!`), hasError = true;
         // config.slideDirection
@@ -452,7 +449,7 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'maxWidth', `${slideMinWidth}px`);
         }
         // Set current active slide in frame for non loop
-        if(this.config.type === SliderType.standard) this.applyWrapperOffsetX(this.activeSlide);
+        if(this.config.type === SliderType.loop) this.applyWrapperOffsetX(this.activeSlide);
     }
     // Vertical
     else if(this.config.direction === ConfigDirection.vertical) {
@@ -468,7 +465,7 @@ function adjustSlides() {
             applyStyle(this.slidesElementsArray[i], 'maxHeight', `${slideMinHeight}px`);
         }
         // Set current active slide in frame for non loop
-        if(this.config.type === SliderType.standard) this.applyWrapperOffsetY(this.activeSlide);
+        if(this.config.type === SliderType.loop) this.applyWrapperOffsetY(this.activeSlide);
     }
 }
 // Adjust slides for config.type of fade
@@ -494,8 +491,8 @@ type ConfigDirectionType = 'vertical' | 'horizontal';
 enum SlideDirection { rightDown = 'rightDown', leftUp = 'leftUp' };
 type SlideDirectionType = 'rightDown' | 'leftUp';
 
-enum SliderType { standard = 'standard', loop = 'loop', fade = 'fade' };
-type SliderTypeType = 'standard' | 'loop' | 'fade';
+enum SliderType { loop = 'loop', infinite = 'infinite', fade = 'fade' };
+type SliderTypeType = 'loop' | 'infinite' | 'fade';
 
 interface Config {
     id?: string,

@@ -65,11 +65,13 @@ const sliderInstance = new Slider('sliderExample', {
 ### Features
 
 - Supports vertical and horizontal sliders.
+- Can choose between slider types: loop, infinite and fade.
 - Can programatically slide in both directions.
+- Can programatically slide to a specific slide.
 - Supports touch/mouse drag, arrow keys and scroll wheel to navigate.
-- Supports infinite loop and a standard slide effect.
 - Can configure how many slides you want visible at once, or do that in your css with perPage: auto.
 - Has callback functions for before and after slide.
+- Has callback function for slide click events.
 
 ### Config - Types
 
@@ -81,7 +83,7 @@ interface Config {
     slideDirection?: 'rightDown' | 'leftUp',
     gap?: number,
     speed?: number,
-    loop?: boolean,
+    type?: 'loop' | 'infinite' | 'fade',
     controls?: {
         touch?: boolean,
         arrows?: boolean,
@@ -93,14 +95,18 @@ interface Config {
         slide?: string
     },
     beforeSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
     }) => void
     afterSlide?: (response: {
-        currentSlide: number,
+        currentSlideIndex: number,
         totalSlides: number,
         lastDirection: string
+    }) => void
+    clickEvent?: (response: {
+        currentSlideIndex: number,
+        totalSlides: number
     }) => void
 };
 ```
@@ -117,12 +123,12 @@ Refer to the config types above to see what values can be used for each config k
 | slideDirection | Specify the direction you want the slider to slide in. This is only used if autoPlay is true. |
 | gap | Specify how large of a gap you want inbetween your slides. This is in pixels. |
 | speed | Specify the delay between the autoPlay sliding through your slides. This is in ms. |
-| loop | Specify if you want the slides to loop once they reach the end, or if you want the slider to reset once it reaches the end. |
+| type | Specify how you want slides to behave when sliding. Either reset once reaching the end (loop), infinite or fade. |
 
 | Key: controls | Description |
 | ----------- | ----------- |
 | touch | Specify if you want mouse and touch navigation turned on for the slider. |
-| arrows | Specify if you want arrow key navigation turned on for the slider. |
+| arrows | Specify if you want arrow key navigation turned on for the slider. In the future this will support custom keys being passed down in the config. |
 | wheel | Specify if you want wheel navigation turned on for the slider. |
 
 | Key: classes | Description |
@@ -135,7 +141,7 @@ Refer to the config types above to see what values can be used for each config k
 | ----------- | ----------- |
 | beforeSlide | Specify a callback function for beforeSlide. As the name suggests: this fires before the slider slides. Refer to the config types above for the response data. |
 | afterSlide | Specify a callback function for afterSlide. As the name suggests: theis fires after the slider slides. Refer to the config types above for the repsonse data. |
-
+| clickEvent | Specify a callback function for clickEvent. This function is added as a click event on each slide and can be destroyed calling the destroy function. |
 
 ### Functions
 
@@ -144,18 +150,19 @@ This isnt the final list of functions, for example a toSlide function is in the 
 | Functions | Required Paramaters | Returns | Description |
 | ----------- | ----------- | ----------- | ----------- |
 | triggerSlide | string: 'rightDown' or 'leftUp' | void |  As it sounds: calling this will trigger the slider to slide in the direction you specify. This function also fires the beforeSlide and afterSlide callbacks, which you can learn more about in the seciton above. |
+| toSlide | number: (index of the slide) | void | Calling this function will navigate to the slide index that is passed to it. This can be used to in your pagination implementation. This function will fire the beforeSlide and afterSlide callbacks, which you can learn more about in the seciton above. |
 | pause | N/A | promise |  Calling this function, if you have autoPlay in the config enabled: will pause the slider for automatically sliding. |
 | start | N/A | promise |  Calling this function, if you have autoPlay in the config enabled: will start the slider so it can automatically slide. This obviously only works if the slider has been paused previously, else will return an error. |
 | destory | N/A | void | Calling this function will destroy all eventListeners for this slider. If you are using this in a spa, its probably best to call this if navigating away from its page. |
 
 
-### Limitations / Future Features
+### Limitations / Future Features / Notes
 
 As this utility is still new and in development, there are a couple of limitations and missing features that we plan to work on.
 
-- [Limitation]: perPage: 'auto' currently should only be used if loop is set to true. If not when the slider gets to the end you will see some empty space to the left of it if the slide is not 100% width.
-- [Feature]: a toSlide function will be added that will allow you to programatically navigate to a given slide. This can be used for your own implementation of a pagination feature.
-- [Feature]: a fade effect.
+- [Note]: When using the ```config.type: 'fade'``` a default height will be set to the slider component with the class ```fixed-height```. This is because the fade type makes the slides absolute to the wrapper so they can be overlayed on top of each other, and so needs a defined height to work. This should be overwritten to your liking.
+- [Note]: When using the ```config.direction: 'vertical'``` a default height will be set tot he slider component with the class ```fixed-height```. This sldier type needs a defined height. This should be overwritten to your liking.
+
 
 <br>
 
