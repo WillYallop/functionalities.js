@@ -210,19 +210,32 @@ export default class Slider {
             error(`Tip: this function counts slides starting from 0!`);
         }
         else {
-            let moveDirection;
-            if(!this.config.loop) moveDirection = standardNavToSingle;
-            else moveDirection = loopNavToSingle;
+            // Check slide cooldown
+            let currentDate = new Date;
+            if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
 
-            const moveDirectionFunc= moveDirection.bind(this);
-            moveDirectionFunc(slideIndex);
+                // If config.beforeSlide
+                if(this.config.beforeSlide != undefined) this.config.beforeSlide({
+                    currentSlide: this.activeSlide,
+                    totalSlides: this.slidesElementsArray.length,
+                    lastDirection: this.lastDirection
+                });
 
-            // If config.afterSlide
-            if(this.config.afterSlide != undefined) this.config.afterSlide({
-                currentSlide: this.activeSlide,
-                totalSlides: this.slidesElementsArray.length,
-                lastDirection: this.lastDirection
-            });
+                let moveDirection;
+                if(!this.config.loop) moveDirection = standardNavToSingle;
+                else moveDirection = loopNavToSingle;
+
+                const moveDirectionFunc= moveDirection.bind(this);
+                moveDirectionFunc(slideIndex);
+                this.lastSlide = new Date();
+
+                // If config.afterSlide
+                if(this.config.afterSlide != undefined) this.config.afterSlide({
+                    currentSlide: this.activeSlide,
+                    totalSlides: this.slidesElementsArray.length,
+                    lastDirection: this.lastDirection
+                });
+            }
         }
     }
     // Stop the autoPlay slider
