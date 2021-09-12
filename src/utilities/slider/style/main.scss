@@ -1,6 +1,5 @@
 .functionalities-slider {
     width: 100%;
-    border: 1px solid black; // temp
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
@@ -23,7 +22,6 @@
         }
         .functionalities-slide {
             box-sizing: border-box;
-            background-color: white;
             &.dont-animate {
                 transition: none;
             }
