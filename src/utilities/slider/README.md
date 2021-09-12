@@ -1,21 +1,3 @@
-<img src="./screenshot.jpeg" style="width: 100%; margin-bottom: 20px;">
-
-# Functionalities.js
-> Still under heavy development
-
-If you are looking for a library that gives you styled, prebuilt components you are in the wrong place!
-
-Functionalities is a utility library for the frontend developers to help speed up development, and not impeed your websites design. It aims to offer solutions for all the common components such as sliders, forms, accordions and more, that you build in your frontend applications over and over again, but with one important fact: they only contain necessary CSS and core functions so if need be you can add to the utilities however you like.
-
-## Current Utilities
-- Sliders [released]
-- Form/Input Validation [coming soon]
-- Accordions [coming soon]
-- Animations [coming soon]
-- Sticky Header [coming soon]
-
-<br>
-
 ## Utility: Sliders
 > released
 
@@ -51,7 +33,7 @@ const sliderInstance = new Slider('sliderExample', {
     autoPlay: true,
     gap: 10,
     slideDirection: 'rightDown',
-    type: 'infinite',
+    type: 'infinite,
     direction: 'horizontal',
     beforeSlide: (data) => {
         console.log('before', data);
@@ -170,29 +152,3 @@ As this utility is still new and in development, there are a couple of limitatio
 
 > limitations
 - [Limitations]: As designed, this doesnt come with any pagination or arrow navigation prebuilt blocks, so we dont interfere with your sites design. We supply the functions you will need to add these.
-
-<br>
-
-## Utility: Form/Input Validation 
-> coming soon
-
-Form/Input validation will be a simple solution to validating input fields based on a specified config. 
-
-## Utility: Accordions
-> coming soon
-
-Quickly get accordions up and running in a project. Just use our simple and felxible boiler plate, pass the parents ID into a new instance of accordions, configure it how you like or use the default config and you're done!
-
-## Utility: Animations
-> coming soon
-
-Functionalities animations utility, makes adding animations to your elements, easier than ever. Create a new instance of animations, pass it some config where you will specify what attribute name and link the animation type you want to associate it with. Then all you have to do is add that attribute name to the elements you want it to apply on and the the utility will do the rest.
-
-If you dont want to use any of our presets for animations, just set the animation type to false for that attribute name, and the library will add a class to those elements where you can then create your custom animation in your CSS.
-
-## Utility: Sticky Header
-> coming soon
-
-Sticky headers is as it sounds. Just add an ID to your header, create a new instance of the sticky header utility, pass it some config or use the defaults. This utility only add functionality. No CSS! This is to ensure flexibility.
-
-Then depending on the users scroll a handfull of classes will be added to the header. One for scrolled down, one for scrolled up and then one for when you are at the very top of the page. This will allow you to create headers that show and hide depennding on the direction the user scrolls, and that have different styles if not scrolled at all.
