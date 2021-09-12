@@ -5,7 +5,7 @@
 
 If you are looking for a library that gives you styled, prebuilt components you are in the wrong place!
 
-Functionalities is a utility library for the frontend developers to help speed up development, and not impeed your websites design. It aims to offer solutions for all the common components such as sliders, forms, accordions and more, that you build in your frontend applications over and over again, but with one important fact: they only contain necessary CSS and core functions so if need be you can add to the utilities however you like.
+Functionalities is a utility library for the frontend developers to help speed up development, and not impeed your websites design. It aims to offer solutions for all the common components such as sliders, forms, accordions and more, that you build in your frontend applications over and over again, but with one important fact: they only contain necessary CSS and core functions.
 
 ## Links
 - 📱 Demo: coming soon
