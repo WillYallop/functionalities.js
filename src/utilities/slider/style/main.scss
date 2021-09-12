@@ -3,6 +3,9 @@
     border: 1px solid black; // temp
     position: relative;
     overflow: hidden;
+    &.fixed-height {
+        height: 600px;
+    }
     * {
         box-sizing: border-box;
     }
@@ -28,4 +31,5 @@
 
 .slide {
     min-width: 600px;
+    // min-height: 400px;
 }

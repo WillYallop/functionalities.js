@@ -87,6 +87,13 @@ export default class Slider {
             this.adjustSlidesHandler = adjustSlides.bind(this);
             this.adjustSlidesHandler();
         }
+        else {
+            // Set fixed defualt height for the slider 
+            if(this.config.direction === ConfigDirection.vertical) {
+                this.sliderElement.classList.add('fixed-height');
+                applyStyle(this.wrapperElement, 'flexDirection', 'column');
+            };
+        }
 
         // Set events to handle interacting with the slider - mobile and mouse touch events
         this.eventsController();
@@ -396,7 +403,11 @@ const applyBasicStyles = (elements: ApplyBasicStyles) => {
 // Adjust slides based on config.perPage so everything is translated and overflowing correctly
 function adjustSlides() {
     // Set fixed defualt height for the slider 
-    if(this.config.direction === ConfigDirection.vertical) applyStyle(this.sliderElement, 'height', '600px');
+    if(this.config.direction === ConfigDirection.vertical) {
+        this.sliderElement.classList.add('fixed-height');
+    };
+
+
     // Set constants
     const [sliderWidth, sliderHeight] = [this.wrapperElement.offsetWidth, this.wrapperElement.offsetHeight];
     const toalGapColumnsSize = (this.config.perPage - 1) * this.config.gap;

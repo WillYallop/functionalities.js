@@ -58,9 +58,6 @@ function loopRightOrDown() {
     if(this.config.direction === 'horizontal') return 'right';
     else return 'down'
 }
-
-
-
 function loopNavToSingle(targetIndex: number) {
 
     // Work out the direction and how many we need to travel
@@ -141,41 +138,110 @@ function loopNavToSingle(targetIndex: number) {
 
 // Standard
 function moveLeftOrUp() {
-    let lingerBellow: number = this.config.perPage - 1;
     if(this.activeSlide - 1 < 0) this.activeSlide = this.slidesElementsArray.length - 1;
     else this.activeSlide--;
 
-    // Work out the slide we should linger on to stop the slider only showing one slide if at the end
-    let slideToIndex: number;
-    if(this.activeSlide + lingerBellow >= this.slidesElementsArray.length - 1) slideToIndex =  this.slidesElementsArray.length - lingerBellow - 1;
-    else slideToIndex = this.activeSlide;
-
     if(this.config.direction === 'horizontal') {
-        this.applyWrapperOffsetX(slideToIndex);
-        return 'left';
+        if(this.slidesElementsArray[this.activeSlide].offsetLeft <= this.wrapperElement.scrollWidth - this.sliderElement.offsetWidth) {
+            // Scroll horizontal 
+            this.applyWrapperOffsetX(this.activeSlide);
+            return 'left';
+        }
+        else {
+            // Stop horizontal
+            // translateX should be wrapper scrollWidth minus the    target slide width and slider width difference
+            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetWidth - this.sliderElement.offsetWidth);
+            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetWidth
+            let translateX = -Math.abs(this.wrapperElement.scrollWidth - sliderSlideDif);
+            // console.log(translateX);
+            applyStyle(this.wrapperElement, 'transform', `translateX(${translateX}px)`);
+            return 'left';
+        }
     }
     else {
-        this.applyWrapperOffsetY(slideToIndex);
-        return 'up'
+        if(this.slidesElementsArray[this.activeSlide].offsetTop <= this.wrapperElement.scrollHeight - this.sliderElement.offsetHeight) {
+            // Scroll vertical 
+            this.applyWrapperOffsetY(this.activeSlide);
+            return 'up'
+        }
+        else {
+            // Stop vertical
+            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetHeight - this.sliderElement.offsetHeight);
+            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetHeight
+            let translateY = -Math.abs(this.wrapperElement.scrollHeight - sliderSlideDif);
+            // console.log(translateX);
+            applyStyle(this.wrapperElement, 'transform', `translateY(${translateY}px)`);
+            return 'up'
+        }
     }
+
+
+
+
+
+
+    // // leftoffset is less than the wrapper width (total slides width) - the slide container width
+    // if(this.slidesElementsArray[this.activeSlide].offsetLeft <= this.wrapperElement.scrollWidth - this.sliderElement.offsetWidth) {
+    //     // Scroll
+    //     if(this.config.direction === 'horizontal') {
+    //         this.applyWrapperOffsetX(this.activeSlide);
+    //         return 'left';
+    //     }
+    //     else {
+    //         this.applyWrapperOffsetY(this.activeSlide);
+    //         return 'up'
+    //     }
+    // }
+    // else {
+    //     // STOP
+    //     // translateX should be wrapper scrollWidth minus the    target slide width and slider width difference
+    //     let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetWidth - this.sliderElement.offsetWidth);
+    //     sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetWidth
+    //     let translateX = -Math.abs(this.wrapperElement.scrollWidth - sliderSlideDif);
+    //     // console.log(translateX);
+    //     applyStyle(this.wrapperElement, 'transform', `translateX(${translateX}px)`);
+    // }
+
+    
+    
 }
 function moveRightOrDown() {
-    let lingerAbove: number = this.slidesElementsArray.length - 1 - (this.config.perPage - 1);
     if(this.activeSlide + 1 >= this.slidesElementsArray.length) this.activeSlide = 0;
     else this.activeSlide++;
 
-    // Work out the slide we should linger on to stop the slider only showing one slide if at the end
-    let slideToIndex: number;
-    if(this.activeSlide >= lingerAbove) slideToIndex = lingerAbove;
-    else slideToIndex = this.activeSlide;
 
     if(this.config.direction === 'horizontal') {
-        this.applyWrapperOffsetX(slideToIndex);
-        return 'right';
+        if(this.slidesElementsArray[this.activeSlide].offsetLeft <= this.wrapperElement.scrollWidth - this.sliderElement.offsetWidth) {
+            // Scroll horizontal 
+            this.applyWrapperOffsetX(this.activeSlide);
+            return 'right';
+        }
+        else {
+            // Stop horizontal
+            // translateX should be wrapper scrollWidth minus the    target slide width and slider width difference
+            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetWidth - this.sliderElement.offsetWidth);
+            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetWidth
+            let translateX = -Math.abs(this.wrapperElement.scrollWidth - sliderSlideDif);
+            // console.log(translateX);
+            applyStyle(this.wrapperElement, 'transform', `translateX(${translateX}px)`);
+            return 'right';
+        }
     }
     else {
-        this.applyWrapperOffsetY(slideToIndex);
-        return 'down'
+        if(this.slidesElementsArray[this.activeSlide].offsetTop <= this.wrapperElement.scrollHeight - this.sliderElement.offsetHeight) {
+            // Scroll vertical 
+            this.applyWrapperOffsetY(this.activeSlide);
+            return 'down'
+        }
+        else {
+            // Stop vertical
+            let sliderSlideDif = Math.abs(this.slidesElementsArray[this.activeSlide].offsetHeight - this.sliderElement.offsetHeight);
+            sliderSlideDif += this.slidesElementsArray[this.activeSlide].offsetHeight
+            let translateY = -Math.abs(this.wrapperElement.scrollHeight - sliderSlideDif);
+            // console.log(translateX);
+            applyStyle(this.wrapperElement, 'transform', `translateY(${translateY}px)`);
+            return 'down'
+        }
     }
 }
 function standardNavToSingle(targetIndex: number) {
