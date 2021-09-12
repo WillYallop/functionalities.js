@@ -5,7 +5,7 @@ import applyStyle from '../../shared/apply-style';
 // Specific
 import './style/main.scss';
 import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, loopLeftOrUp, loopRightOrDown } from './handler/movement';
+import { moveLeftOrUp, moveRightOrDown, standardNavToSingle, loopLeftOrUp, loopRightOrDown, loopNavToSingle } from './handler/movement';
 
 // Slider
 export default class Slider {
@@ -87,6 +87,13 @@ export default class Slider {
             this.adjustSlidesHandler = adjustSlides.bind(this);
             this.adjustSlidesHandler();
         }
+        else {
+            // Set fixed defualt height for the slider 
+            if(this.config.direction === ConfigDirection.vertical) {
+                this.sliderElement.classList.add('fixed-height');
+                applyStyle(this.wrapperElement, 'flexDirection', 'column');
+            };
+        }
 
         // Set events to handle interacting with the slider - mobile and mouse touch events
         this.eventsController();
@@ -103,19 +110,19 @@ export default class Slider {
     }
     eventsController() {
         // Loop transition
-        if(this.config.loop) {
-            this.wrapperElement.addEventListener('transitionend', () => {
-                if(this.lastDirection === SlideDirection.rightDown) {
-                    this.wrapperElement.classList.remove('wrapper-transition');
-                    this.wrapperElement.append(this.slidesElementsArray[0])
-                    this.slidesElementsArray.push(this.slidesElementsArray.shift());
-                    applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
-                }
-                else if(this.lastDirection === SlideDirection.leftUp) {
+        // if(this.config.loop) {
+        //     this.wrapperElement.addEventListener('transitionend', () => {
+        //         if(this.lastDirection === SlideDirection.rightDown) {
+        //             this.wrapperElement.classList.remove('wrapper-transition');
+        //             this.wrapperElement.append(this.slidesElementsArray[0])
+        //             this.slidesElementsArray.push(this.slidesElementsArray.shift());
+        //             applyStyle(this.wrapperElement, 'transform', `translateX(0) translateY(0)`);
+        //         }
+        //         else if(this.lastDirection === SlideDirection.leftUp) {
 
-                }
-            });
-        }
+        //         }
+        //     });
+        // }
 
         // Controls
         // Touch events - mobile and mouse   
@@ -186,7 +193,7 @@ export default class Slider {
                 return;
             }
             const moveDirectionFunc: MovementType = moveDirection.bind(this);
-            const directionMoved = moveDirectionFunc();
+            moveDirectionFunc();
             this.lastSlide = new Date();
 
             // If config.afterSlide
@@ -195,6 +202,53 @@ export default class Slider {
                 totalSlides: this.slidesElementsArray.length,
                 lastDirection: this.lastDirection
             });
+        }
+    }
+    // 
+    toSlide(slideIndex: number) {
+        if(typeof slideIndex != 'number') {
+            error(`Typeof "${ typeof slideIndex }" is not allow for the paramater on this function. It must be type "number".`);
+            return;
+        }
+
+        // Verify slide number
+        if(slideIndex > this.slidesElementsArray.length || slideIndex < 0) {
+            error(`Cannot find slide with position of ${slideIndex}! Please make sure the slide number you are wanting to visit exists!`);
+            error(`Tip: this function counts slides starting from 0!`);
+        }
+        else {
+            // Check slide cooldown
+            let currentDate = new Date;
+            if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
+
+                // If config.beforeSlide
+                if(this.config.beforeSlide != undefined) this.config.beforeSlide({
+                    currentSlide: this.activeSlide,
+                    totalSlides: this.slidesElementsArray.length,
+                    lastDirection: this.lastDirection
+                });
+
+                let moveDirection;
+                if(!this.config.loop) moveDirection = standardNavToSingle;
+                else moveDirection = loopNavToSingle;
+
+                const moveDirectionFunc= moveDirection.bind(this);
+                moveDirectionFunc(slideIndex);
+                this.lastSlide = new Date();
+
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
+
+                // If config.afterSlide
+                if(this.config.afterSlide != undefined) this.config.afterSlide({
+                    currentSlide: this.activeSlide,
+                    totalSlides: this.slidesElementsArray.length,
+                    lastDirection: this.lastDirection
+                });
+            }
         }
     }
     // Stop the autoPlay slider
@@ -349,7 +403,11 @@ const applyBasicStyles = (elements: ApplyBasicStyles) => {
 // Adjust slides based on config.perPage so everything is translated and overflowing correctly
 function adjustSlides() {
     // Set fixed defualt height for the slider 
-    if(this.config.direction === ConfigDirection.vertical) applyStyle(this.sliderElement, 'height', '600px');
+    if(this.config.direction === ConfigDirection.vertical) {
+        this.sliderElement.classList.add('fixed-height');
+    };
+
+
     // Set constants
     const [sliderWidth, sliderHeight] = [this.wrapperElement.offsetWidth, this.wrapperElement.offsetHeight];
     const toalGapColumnsSize = (this.config.perPage - 1) * this.config.gap;
