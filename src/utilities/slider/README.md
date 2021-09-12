@@ -1,3 +1,5 @@
+<img src="../../../images/sliders.jpeg" style="width: 100%; margin-bottom: 20px;">
+
 ## Utility: Sliders
 > released
 
