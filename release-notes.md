@@ -1,5 +1,12 @@
 # Functionalities.js Release Notes
 
+## v0.3.0
+> features
+- [Sticky Headers]: Released the sticky headers utility.
+
+> bug fixes
+- [Sliders]: Fixed issue where leaving the config.classes object empty would through errors.
+
 ## v0.2.1
 > changes
 - [Build] Forgot to build in previous version...
