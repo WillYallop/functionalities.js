@@ -1,5 +1,10 @@
 # Functionalities.js Release Notes
 
+## v0.3.1
+> bug fixes
+- [Sliders]: Fixed typo in destroy function name - readmes update to reflect.
+- [Sticky Headers]: Fixed typo in destroy function name - readmes update to reflect.
+
 ## v0.3.0
 > features
 - [Sticky Headers]: Released the sticky headers utility.
