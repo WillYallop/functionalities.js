@@ -229,6 +229,12 @@ export default class Slider {
                 moveDirectionFunc(slideIndex);
                 this.lastSlide = new Date();
 
+                if(this.config.autoPlay) {
+                    this.pauseAutoplay = true;
+                    clearTimeout(this.restartAutoPlayTimeout);
+                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+                }
+
                 // If config.afterSlide
                 if(this.config.afterSlide != undefined) this.config.afterSlide({
                     currentSlide: this.activeSlide,
