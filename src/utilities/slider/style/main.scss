@@ -1,31 +1,35 @@
 .functionalities-slider {
     width: 100%;
-    border: 1px solid black; // temp
     position: relative;
     overflow: hidden;
-    * {
-        box-sizing: border-box;
+    box-sizing: border-box;
+    &.fixed-height {
+        height: 600px;
     }
     .functionalities-wrapper {
         width: 100%;
         height: 100%;
         display: flex;
         transform: translateX(0), translateY(0);
+        box-sizing: border-box;
         &.wrapper-transition {
             transition-duration: 0.3s;
             transition-property: transform;   
+            .functionalities-slide {
+                transition-duration: 1s;
+                transition-property: opacity;  
+            }
         }
         .functionalities-slide {
-            // total gap coloums / visible slides
-            // min-width: calc(25% - 15px);
-            border: 1px solid red; // temp
-            &.active {
-                border: 1px solid green;
+            box-sizing: border-box;
+            &.dont-animate {
+                transition: none;
             }
         }
     }
 }
 
-.slide {
-    min-width: 600px;
-}
+// .slide {
+//     // min-width: 600px;
+//     // min-height: 400px;
+// }

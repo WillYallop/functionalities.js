@@ -1,7 +1,7 @@
 {
   "name": "functionalities",
-  "version": "0.1.0",
-  "description": "A simple slider library to speed up dev.",
+  "version": "0.2.0",
+  "description": "Functionalities is a utility library that offers functional components, to speed up development for the front end, while not impeeding your websites design.",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "files": [
