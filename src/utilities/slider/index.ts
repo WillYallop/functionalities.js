@@ -4,13 +4,20 @@ import applyStyle from '../../shared/apply-style';
 
 // Specific
 import './style/main.scss';
-import {  mouseDownEvent, touchStartEvent, mouseMoveEvent, touchmoveEvent, mouseTouchMove, mouseTouchUp , arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, loopNavToSingle, infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, fadeBack, fadeForward, fadeToSingle } from './handler/movement';
+import {  
+    mouseDownEvent, touchStartEvent, mouseMoveEvent, touchmoveEvent, mouseTouchMove, mouseTouchUp, 
+    handleKeyEvent, 
+    handleWheelEvent 
+} from './handler/control-events';
+import { 
+    moveLeftOrUp, moveRightOrDown, loopNavToSingle, 
+    infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, 
+    fadeBack, fadeForward, fadeToSingle 
+} from './handler/movement';
 
 // Slider
 export default class Slider {
     config: Config;
-    // Functions
     // Touch handlers
     mouseDownEventHandler;
     touchStartEventHandler;
@@ -18,7 +25,11 @@ export default class Slider {
     touchmoveEventHandler;
     mouseTouchUpHandler;
     mouseTouchMoveHandler;
-
+    // Key
+    handleKeyEventHandler;
+    // Scroll
+    handleWheelEventHandler;
+    // Functions
     arrowEventsInitiate;
     wheelEventsInitiate;
     adjustSlidesHandler: () => void;
@@ -155,15 +166,16 @@ export default class Slider {
             this.sliderElement.addEventListener('touchend', this.mouseTouchUpHandler, true);
         }
         // // Keyboard arrow event
-        // if(this.config.controls.arrows) {
-        //     this.arrowEventsInitiate = arrowEventsInitiate.bind(this);
-        //     this.touchEventsInitiate(this.controlEventCallback);
-        // }
+        if(this.config.controls.arrows) {
+            this.handleKeyEventHandler = handleKeyEvent.bind(this);
+            this.sliderElement.setAttribute('tabindex', '0');
+            this.sliderElement.addEventListener('keydown', this.handleKeyEventHandler, true);
+        }
         // // Mouse wheel event
-        // if(this.config.controls.wheel) {
-        //     this.wheelEventsInitiate = wheelEventsInitiate.bind(this);
-        //     this.touchEventsInitiate(this.controlEventCallback);
-        // }
+        if(this.config.controls.wheel) {
+            this.handleWheelEventHandler = handleWheelEvent.bind(this);
+            this.sliderElement.addEventListener('wheel', this.handleWheelEventHandler, true);
+        }
 
         // this.config.clickEvent
         if(this.config.clickEvent != undefined) {
@@ -351,9 +363,13 @@ export default class Slider {
             this.sliderElement.removeEventListener('touchend', this.mouseTouchUpHandler, true);
         }
         // Keyboard arrow event
-        if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
+        if(this.config.controls.arrows) {
+            this.sliderElement.removeEventListener('keydown', this.handleKeyEventHandler, true);
+        };
         // Mouse wheel event
-        if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
+        if(this.config.controls.wheel) {
+            this.sliderElement.removeEventListener('wheel', this.handleWheelEventHandler, true);
+        }
 
         // this.config.clickEvent
         if(this.config.clickEvent != undefined) {
