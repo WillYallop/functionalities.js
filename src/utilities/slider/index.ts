@@ -134,16 +134,6 @@ export default class Slider {
         // Resize event creation
         this.resizeEventHandler();
     }
-
-    controlEventCallback(direction) {
-        this.triggerSlide(direction);
-        if(this.config.autoPlay) {
-            this.pauseAutoplay = true;
-            clearTimeout(this.restartAutoPlayTimeout);
-            this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
-        }
-    }
-
     eventsController() {
         // Controls
         // Touch events - mobile and mouse   
@@ -183,6 +173,14 @@ export default class Slider {
             for(let i = 0; i < this.slidesElementsArray.length; i++) {
                 this.slidesElementsArray[i].addEventListener('click', this.clickEventHandler, true);
             }
+        }
+    }
+    controlEventCallback(direction) {
+        this.triggerSlide(direction);
+        if(this.config.autoPlay) {
+            this.pauseAutoplay = true;
+            clearTimeout(this.restartAutoPlayTimeout);
+            this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
         }
     }
 

@@ -5,8 +5,12 @@ export function mouseDownEvent(e) {prevPos = [e.clientX, e.clientY], unlocked = 
 export function touchStartEvent(e) {prevPos = [e.changedTouches[0].screenX, e.changedTouches[0].screenY], unlocked = true};
 
 // Mouse and touch move
-export function mouseMoveEvent(e) { e.preventDefault(); this.mouseTouchMoveHandler(e.clientX, e.clientY);}
-export function touchmoveEvent(e){e.preventDefault(); this.mouseTouchMoveHandler(e.changedTouches[0].screenX, e.changedTouches[0].screenY);}
+export function mouseMoveEvent(e) { 
+    this.mouseTouchMoveHandler(e.clientX, e.clientY);
+}
+export function touchmoveEvent(e){
+    this.mouseTouchMoveHandler(e.changedTouches[0].screenX, e.changedTouches[0].screenY);
+}
 export function mouseTouchMove(x: number, y: number) {
     if(unlocked) {
         unlocked = false;
