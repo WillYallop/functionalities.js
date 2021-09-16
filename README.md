@@ -1,7 +1,7 @@
 <img src="https://github.com/WillYallop/functionalities.js/blob/master/images/banner.jpeg" style="width: 100%; margin-bottom: 20px;">
 
 # Functionalities.js
-> Still under heavy development - v0.3.1
+> Still under heavy development - v0.3.2
 
 If you are looking for a library that gives you styled, prebuilt components you are in the wrong place!
 
