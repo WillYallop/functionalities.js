@@ -4,14 +4,32 @@ import applyStyle from '../../shared/apply-style';
 
 // Specific
 import './style/main.scss';
-import { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy } from './handler/control-events';
-import { moveLeftOrUp, moveRightOrDown, loopNavToSingle, infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, fadeBack, fadeForward, fadeToSingle } from './handler/movement';
+import {  
+    mouseDownEvent, touchStartEvent, mouseMoveEvent, touchmoveEvent, mouseTouchMove, mouseTouchUp, 
+    handleKeyEvent, 
+    handleWheelEvent 
+} from './handler/control-events';
+import { 
+    moveLeftOrUp, moveRightOrDown, loopNavToSingle, 
+    infiniteLeftOrUp, infiniteRightOrDown, infiniteNavToSingle, 
+    fadeBack, fadeForward, fadeToSingle 
+} from './handler/movement';
 
 // Slider
 export default class Slider {
     config: Config;
+    // Touch handlers
+    mouseDownEventHandler;
+    touchStartEventHandler;
+    mouseMoveEventHandler;
+    touchmoveEventHandler;
+    mouseTouchUpHandler;
+    mouseTouchMoveHandler;
+    // Key
+    handleKeyEventHandler;
+    // Scroll
+    handleWheelEventHandler;
     // Functions
-    touchEventsInitiate;
     arrowEventsInitiate;
     wheelEventsInitiate;
     adjustSlidesHandler: () => void;
@@ -120,39 +138,33 @@ export default class Slider {
         // Controls
         // Touch events - mobile and mouse   
         if(this.config.controls.touch) {
-            this.touchEventsInitiate = touchEventsInitiate.bind(this);
-            this.touchEventsInitiate((direction) => {
-                this.triggerSlide(direction);
-                if(this.config.autoPlay) {
-                    this.pauseAutoplay = true;
-                    clearTimeout(this.restartAutoPlayTimeout);
-                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
-                }
-            });
+            // Bind functions
+            this.mouseDownEventHandler = mouseDownEvent.bind(this);
+            this.touchStartEventHandler = touchStartEvent.bind(this);
+            this.mouseMoveEventHandler = mouseMoveEvent.bind(this);
+            this.touchmoveEventHandler = touchmoveEvent.bind(this);
+            this.mouseTouchUpHandler = mouseTouchUp.bind(this);
+            this.mouseTouchMoveHandler = mouseTouchMove.bind(this);
+            // Mouse and touch down/start
+            this.sliderElement.addEventListener('mousedown', this.mouseDownEventHandler, true);
+            this.sliderElement.addEventListener('touchstart', this.touchStartEventHandler, true);
+            // Mouse and touch move
+            this.sliderElement.addEventListener('mousemove', this.mouseMoveEventHandler, true);
+            this.sliderElement.addEventListener('touchmove', this.touchmoveEventHandler, true);
+            // Mouse up 
+            this.sliderElement.addEventListener('mouseup', this.mouseTouchUpHandler, true);
+            this.sliderElement.addEventListener('touchend', this.mouseTouchUpHandler, true);
         }
-        // Keyboard arrow event
+        // // Keyboard arrow event
         if(this.config.controls.arrows) {
-            this.arrowEventsInitiate = arrowEventsInitiate.bind(this);
-            this.arrowEventsInitiate((direction) => {
-                this.triggerSlide(direction);
-                if(this.config.autoPlay) {
-                    this.pauseAutoplay = true;
-                    clearTimeout(this.restartAutoPlayTimeout);
-                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
-                }
-            });
+            this.handleKeyEventHandler = handleKeyEvent.bind(this);
+            this.sliderElement.setAttribute('tabindex', '0');
+            this.sliderElement.addEventListener('keydown', this.handleKeyEventHandler, true);
         }
-        // Mouse wheel event
+        // // Mouse wheel event
         if(this.config.controls.wheel) {
-            this.wheelEventsInitiate = wheelEventsInitiate.bind(this);
-            this.wheelEventsInitiate((direction) => {
-                this.triggerSlide(direction);
-                if(this.config.autoPlay) {
-                    this.pauseAutoplay = true;
-                    clearTimeout(this.restartAutoPlayTimeout);
-                    this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
-                }
-            });
+            this.handleWheelEventHandler = handleWheelEvent.bind(this);
+            this.sliderElement.addEventListener('wheel', this.handleWheelEventHandler, true);
         }
 
         // this.config.clickEvent
@@ -163,9 +175,18 @@ export default class Slider {
             }
         }
     }
+    controlEventCallback(direction) {
+        this.triggerSlide(direction);
+        if(this.config.autoPlay) {
+            this.pauseAutoplay = true;
+            clearTimeout(this.restartAutoPlayTimeout);
+            this.restartAutoPlayTimeout = setTimeout(() => {this.pauseAutoplay = false;}, 5000);
+        }
+    }
 
     // Trigger slide
     triggerSlide(direction: SlideDirectionType) {
+
         // Check slide cooldown
         let currentDate = new Date;
         if(this.lastSlide.getTime() + 300 < currentDate.getTime()) {
@@ -328,11 +349,25 @@ export default class Slider {
             window.removeEventListener('resize', this.adjustSlidesHandler);
         }
         // For config.enableTouch
-        if(this.config.controls.touch) touchEventsDestroy(this.sliderElement);
+        if(this.config.controls.touch) {
+            // Mouse and touch down/start
+            this.sliderElement.removeEventListener('mousedown', this.mouseDownEventHandler, true);
+            this.sliderElement.removeEventListener('touchstart', this.touchStartEventHandler, true);
+            // Mouse and touch move
+            this.sliderElement.removeEventListener('mousemove', this.mouseMoveEventHandler, true);
+            this.sliderElement.removeEventListener('touchmove', this.touchmoveEventHandler, true);
+            // Mouse up 
+            this.sliderElement.removeEventListener('mouseup', this.mouseTouchUpHandler, true);
+            this.sliderElement.removeEventListener('touchend', this.mouseTouchUpHandler, true);
+        }
         // Keyboard arrow event
-        if(this.config.controls.arrows) arrowEventsDestroy(this.sliderElement);
+        if(this.config.controls.arrows) {
+            this.sliderElement.removeEventListener('keydown', this.handleKeyEventHandler, true);
+        };
         // Mouse wheel event
-        if(this.config.controls.wheel) wheelEventsDestroy(this.sliderElement);
+        if(this.config.controls.wheel) {
+            this.sliderElement.removeEventListener('wheel', this.handleWheelEventHandler, true);
+        }
 
         // this.config.clickEvent
         if(this.config.clickEvent != undefined) {

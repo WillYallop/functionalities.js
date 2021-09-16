@@ -1,5 +1,9 @@
-import { touchEventsInitiate, touchEventsDestroy } from './controls/touch';
-import { arrowEventsInitiate, arrowEventsDestroy } from './controls/arrow';
-import { wheelEventsInitiate, wheelEventsDestroy } from './controls/wheel';
+import { mouseDownEvent, touchStartEvent, mouseMoveEvent, touchmoveEvent, mouseTouchMove, mouseTouchUp } from './controls/touch';
+import { handleKeyEvent } from './controls/arrow';
+import { handleWheelEvent } from './controls/wheel';
 
-export { touchEventsInitiate, touchEventsDestroy, arrowEventsInitiate, arrowEventsDestroy, wheelEventsInitiate, wheelEventsDestroy };
+export { 
+    mouseDownEvent, touchStartEvent, mouseMoveEvent, touchmoveEvent, mouseTouchMove, mouseTouchUp, 
+    handleKeyEvent, 
+    handleWheelEvent 
+};
