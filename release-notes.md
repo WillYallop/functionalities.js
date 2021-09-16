@@ -2,6 +2,10 @@
 
 ## v0.3.1
 > bug fixes
+- [Sliders]: Fixed issues where all controller types would refference a non binded callback for triggerSlide which meant its this wasnt refferencing its class instace. This caused issues where control events would only work on one slider, and effect all others if there were multiple instances created.
+
+## v0.3.1
+> bug fixes
 - [Sliders]: Fixed typo in destroy function name - readmes update to reflect.
 - [Sticky Headers]: Fixed typo in destroy function name - readmes update to reflect.
 
