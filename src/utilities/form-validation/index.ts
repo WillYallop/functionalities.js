@@ -2,11 +2,12 @@ interface FormValidationConfig {
     id?: string;
 }
 enum VerificationMethods { 
-    email = 'EmailValidator', 
-    name = 'NameValidator',
-    custom = 'CustomValidator',
-    phone = 'PhoneValidator',
-    address = 'AddressValidator'
+    email = 'email', 
+    name = 'name',
+    longText = 'longText',
+    custom = 'custom',
+    phone = 'phone',
+    address = 'address'
 }
 enum InputTypes {
     input = 'input',
@@ -15,10 +16,10 @@ enum InputTypes {
     checkbox = 'checkbox',
     radio = 'radio'
 }
-type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator;
+type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator | LongTextValidator | false;
 interface InputObj {
     passed: boolean;
-    method: VerificationMethods,
+    method: VerificationMethods | false,
     element: HTMLElement,
     type: InputTypes,
     validator: ValidatorClasses
@@ -31,6 +32,7 @@ import applyStyle from '../../shared/apply-style';
 
 import EmailValidator from "./validators/email";
 import NameValidator from "./validators/name";
+import LongTextValidator from "./validators/name";
 import CustomValidator from "./validators/custom";
 import PhoneValidator from "./validators/phone";
 import AddressValidator from "./validators/address";
@@ -41,6 +43,14 @@ const inputTypes = [
     InputTypes.select,
     InputTypes.checkbox,
     InputTypes.radio
+];
+const validationMethods = [
+    VerificationMethods.email,
+    VerificationMethods.name,
+    VerificationMethods.longText,
+    VerificationMethods.custom,
+    VerificationMethods.phone,
+    VerificationMethods.address
 ];
 
 export default class FormValidation {
@@ -60,13 +70,69 @@ export default class FormValidation {
     initialise() {
         // Add supported elements in the form to the inputs map
         for(let i = 0; i < this.formElement.children.length; i++) {
-            let element = this.formElement.children[i];
+            let element: any = this.formElement.children[i];
             // if valid input type
             let validElement = inputTypes.find( x => x === element.localName );
             if(validElement) {
-                console.log(element.localName)
+
+                // If the element has no ID skip it.
+                // If the validation method is not set, we do not validate than input.
+                if(element.id) {
+                    var validationMethod: false | VerificationMethods;
+                    var validator: ValidatorClasses;
+                    let hasMethod = validationMethods.find( x => x === element.getAttribute('validation-method'));
+                    console.log(hasMethod);
+
+
+                    if(hasMethod) {
+                        switch(hasMethod) {
+                            case VerificationMethods.email: {
+                                validator = new EmailValidator;
+                                break;
+                            }
+                            case VerificationMethods.name: {
+                                validator = new NameValidator;
+                                break;
+                            }
+                            case VerificationMethods.longText: {
+                                validator = new LongTextValidator;
+                                break;
+                            }
+                            case VerificationMethods.custom: {
+                                validator = new CustomValidator;
+                                break;
+                            }
+                            case VerificationMethods.phone: {
+                                validator = new PhoneValidator;
+                                break;
+                            }
+                            case VerificationMethods.address: {
+                                validator = new AddressValidator;
+                                break;
+                            }
+                        }
+                        validationMethod = hasMethod;
+                    }
+                    else {
+                        validationMethod = false;
+                        validator = false;
+                    };
+
+           
+
+                    // Set new input in map
+                    this.inputs.set(element.id, {
+                        passed: false,
+                        method: validationMethod,
+                        element: element,
+                        type: validElement,
+                        validator: validator
+                    });
+                }
             }
         }
+
+        console.log(this.inputs);
 
     }
     // Verify values for non typescript implementation
