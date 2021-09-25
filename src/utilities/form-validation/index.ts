@@ -34,7 +34,7 @@ enum InputTypes {
 }
 type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator | LongTextValidator | false;
 interface InputObj {
-    method: VerificationMethods | false,
+    method: VerificationMethods | false | string,
     element: HTMLElement,
     type: InputTypes,
     validator: ValidatorClasses
@@ -65,7 +65,6 @@ const validationMethods = [
     VerificationMethods.email,
     VerificationMethods.name,
     VerificationMethods.longText,
-    VerificationMethods.custom,
     VerificationMethods.phone,
     VerificationMethods.address
 ];
@@ -90,7 +89,7 @@ export default class FormValidation {
         this.inputs = new Map();
         
         this.formElement = document.getElementById(id);
-        if(this.verifyConfig()) this.initialise(); // do work
+        if(!this.verifyConfig()) this.initialise(); // do work
     }
     initialise() {
         // Add supported elements in the form to the inputs map
@@ -102,7 +101,7 @@ export default class FormValidation {
                 // If the element has no ID skip it.
                 // If the validation method is not set, we do not validate than input.
                 if(element.id) {
-                    var validationMethod: false | VerificationMethods;
+                    var validationMethod: false | VerificationMethods | string;
                     var validator: ValidatorClasses;
                     let hasMethod = validationMethods.find( x => x === element.getAttribute('validation-method'));
                     if(hasMethod) {
@@ -119,10 +118,6 @@ export default class FormValidation {
                                 validator = new LongTextValidator;
                                 break;
                             }
-                            case VerificationMethods.custom: {
-                                validator = new CustomValidator;
-                                break;
-                            }
                             case VerificationMethods.phone: {
                                 validator = new PhoneValidator;
                                 break;
@@ -135,8 +130,23 @@ export default class FormValidation {
                         validationMethod = hasMethod;
                     }
                     else {
-                        validationMethod = false;
-                        validator = false;
+                        // If validation method doesnt exist in our preset validators
+                        // Check if the config contains a custom one with a matching name
+                        if(this.config.customValidators && this.config.customValidators.length > 0) {
+                            let hasCustomMethod = this.config.customValidators.find( x => x.methodName === element.getAttribute('validation-method'));
+                            if(hasCustomMethod) {
+                                validationMethod = hasCustomMethod.methodName;
+                                validator = new CustomValidator(hasCustomMethod);
+                            }
+                            else {
+                                validationMethod = false;
+                                validator = false;
+                            }
+                        }
+                        else {
+                            validationMethod = false;
+                            validator = false;
+                        }
                     };
                     // Set new input in map
                     this.inputs.set(element.id, {
@@ -189,7 +199,3 @@ export default class FormValidation {
 // Inputs will contain a required tag and then a validation tag
 // Create a base input class that can be extended depending on the type of input
 // Go through each input then then apply the checks
-
-
-
-
