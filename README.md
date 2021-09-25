@@ -180,6 +180,16 @@ Refer to the config types above to see what values can be used for each config k
 
 > limitations
 - [Limitations]: As designed, this doesnt come with any pagination or arrow navigation prebuilt blocks, so we dont interfere with your sites design. We supply the functions you will need to add these.
+- [Limitations]: If you have your perPage set to the amount of slides that exist - when on the infinite effect, it wont be a seamless transition.
+- [Limitations]: The clickEvent callback doesnt return the position of the slide that is clicked (Will be addressed in a future update).
+
+### Future Updates
+
+- The clickEvent will return the position of the slide you click.
+- The desktop drag control method will allow you to free control the translation while holding down. When lifitng up it will snap to the closest slide.
+- When the slide is active all links within the slides will have point events set to none temporarilly so you dont accidently click them when releasing the touch drag. Currently you can implement this yourself - its just obviosuly extra work.
+- Add support to the toSlide function for you to pass it numbers greater than the total amount of slides - it will then work out from there what slide it should actually go to.
+- [Potentially]: Add support to centre the active slide instead of it always being the first one.
 
 <br>
 
