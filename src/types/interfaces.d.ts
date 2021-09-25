@@ -12,3 +12,6 @@ interface AdjustSlides {
     wrapper: HTMLElement,
     slides: any
 }
+
+// Form Validation
+// Inputs map
