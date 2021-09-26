@@ -6,7 +6,7 @@ export default class NameValidator extends InputHandler {
         super(id);
 
         this.validateConfig = {
-            regex: new RegExp('test'),
+            regex: new RegExp(/^[a-z A-Z]+(?:-[a-z A-Z]+)*$/),
             length: {
                 min: 0,
                 max: 50

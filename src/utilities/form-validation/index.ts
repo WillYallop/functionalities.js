@@ -37,7 +37,7 @@ enum InputTypes {
 type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator | LongTextValidator | false;
 interface InputObj {
     method: VerificationMethods | false | string,
-    element: HTMLElement,
+    element: HTMLInputElement,
     type: InputTypes,
     validator: ValidatorClasses
 }
@@ -187,15 +187,41 @@ export default class FormValidation {
 
     // External function
     async verify() {
-        let response = [];
+        let response: VerifyResponse = {
+            passed: true,
+            inputs: []
+        };
         for (const [key, value] of this.inputs.entries()) {
-            // console.log(key, value);
-            response.push({
+
+            // Input obj
+            let inputObj: VerifyResponseInputObj = {
                 id: key,
-                valid: value.validator != false ? await value.validator.validate() : true
-            });
+                valid: true,
+                value: '',
+                uriComponentEncoded: '',
+                errors: [
+
+                ]
+            };
+
+            // If validator is a class and not false
+            if(value.validator != false) {
+                let validateResponse = await value.validator.validate();
+                console.log(validateResponse);
+                inputObj = { ...inputObj, ...validateResponse };
+
+                if(!validateResponse.valid) response.passed = false;
+            } 
+            else {
+                inputObj.valid = true;
+                inputObj.value = value.element.value;
+                inputObj.uriComponentEncoded = encodeURIComponent(value.element.value);
+            }
+
+            // Push to response inputs
+            response.inputs.push(inputObj);
         }
-        console.log(response);
+        // console.log(response);
     }
 }
 
