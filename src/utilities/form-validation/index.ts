@@ -1,8 +1,10 @@
 interface CustomValidatorObj {
     methodName: string,
     regex: RegExp | false,
-    minChar: number | false,
-    maxChar: number | false,
+    length: {
+        min: number | false,
+        max: number | false
+    }
     validator?: (value:any) => boolean; 
 }
 
@@ -35,7 +37,7 @@ enum InputTypes {
 type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator | LongTextValidator | false;
 interface InputObj {
     method: VerificationMethods | false | string,
-    element: HTMLElement,
+    element: HTMLInputElement,
     type: InputTypes,
     validator: ValidatorClasses
 }
@@ -107,23 +109,23 @@ export default class FormValidation {
                     if(hasMethod) {
                         switch(hasMethod) {
                             case VerificationMethods.email: {
-                                validator = new EmailValidator;
+                                validator = new EmailValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.name: {
-                                validator = new NameValidator;
+                                validator = new NameValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.longText: {
-                                validator = new LongTextValidator;
+                                validator = new LongTextValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.phone: {
-                                validator = new PhoneValidator;
+                                validator = new PhoneValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.address: {
-                                validator = new AddressValidator;
+                                validator = new AddressValidator(element.id);
                                 break;
                             }
                         }
@@ -136,7 +138,7 @@ export default class FormValidation {
                             let hasCustomMethod = this.config.customValidators.find( x => x.methodName === element.getAttribute('validation-method'));
                             if(hasCustomMethod) {
                                 validationMethod = hasCustomMethod.methodName;
-                                validator = new CustomValidator(hasCustomMethod);
+                                validator = new CustomValidator(element.id, hasCustomMethod);
                             }
                             else {
                                 validationMethod = false;
@@ -159,7 +161,7 @@ export default class FormValidation {
             }
         }
 
-        console.log(this.inputs);
+        // console.log(this.inputs);
 
     }
     // Verify values for non typescript implementation
@@ -184,12 +186,41 @@ export default class FormValidation {
 
 
     // External function
-    verify() {
+    async verify() {
+        let response: VerifyResponse = {
+            passed: true,
+            inputs: []
+        };
+        for (const [key, value] of this.inputs.entries()) {
 
-        // Loop through each entry in the inputs map
-        // Run the validator
-        // Return response
+            // Input obj
+            let inputObj: VerifyResponseInputObj = {
+                id: key,
+                valid: true,
+                value: '',
+                uriComponentEncoded: '',
+                errors: [
 
+                ]
+            };
+
+            // If validator is a class and not false
+            if(value.validator != false) {
+                let validateResponse = await value.validator.validate();
+                inputObj = { ...inputObj, ...validateResponse };
+
+                if(!validateResponse.valid) response.passed = false;
+            } 
+            else {
+                inputObj.valid = true;
+                inputObj.value = value.element.value;
+                inputObj.uriComponentEncoded = encodeURIComponent(value.element.value);
+            }
+
+            // Push to response inputs
+            response.inputs.push(inputObj);
+        }
+        console.log(response);
     }
 }
 
