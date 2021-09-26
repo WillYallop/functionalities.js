@@ -1,5 +1,5 @@
 export default class InputHandler {
-    constructor() {
+    constructor(id: string, config: CustomValidatorObj | false) {
         
     }
 }

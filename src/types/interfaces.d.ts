@@ -15,3 +15,10 @@ interface AdjustSlides {
 
 // Form Validation
 // Inputs map
+interface CustomValidatorObj {
+    methodName: string,
+    regex: RegExp | false,
+    minChar: number | false,
+    maxChar: number | false,
+    validator?: (value:any) => boolean; 
+}

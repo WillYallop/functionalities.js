@@ -107,23 +107,23 @@ export default class FormValidation {
                     if(hasMethod) {
                         switch(hasMethod) {
                             case VerificationMethods.email: {
-                                validator = new EmailValidator;
+                                validator = new EmailValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.name: {
-                                validator = new NameValidator;
+                                validator = new NameValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.longText: {
-                                validator = new LongTextValidator;
+                                validator = new LongTextValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.phone: {
-                                validator = new PhoneValidator;
+                                validator = new PhoneValidator(element.id);
                                 break;
                             }
                             case VerificationMethods.address: {
-                                validator = new AddressValidator;
+                                validator = new AddressValidator(element.id);
                                 break;
                             }
                         }
@@ -136,7 +136,7 @@ export default class FormValidation {
                             let hasCustomMethod = this.config.customValidators.find( x => x.methodName === element.getAttribute('validation-method'));
                             if(hasCustomMethod) {
                                 validationMethod = hasCustomMethod.methodName;
-                                validator = new CustomValidator(hasCustomMethod);
+                                validator = new CustomValidator(element.id, hasCustomMethod);
                             }
                             else {
                                 validationMethod = false;

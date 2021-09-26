@@ -1,8 +1,10 @@
 import InputHandler from "../input";
 
 export default class CustomValidator extends InputHandler {
-    constructor(config) {
+    constructor(id: string, config: CustomValidatorObj) {
         
-        super()
+        super(id, config);
     }
 }
+
+
