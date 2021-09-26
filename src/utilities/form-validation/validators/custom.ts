@@ -15,7 +15,16 @@ export default class CustomValidator extends InputHandler {
             validator: config.validator != undefined ? config.validator : false
         }
 
-        this.validateHandler();
+    }
+
+    async validate() {
+        return await this.validateHandler();
+        // Custom validator
+        // if(this.validateConfig.validator != false) this.checkCustomValidator();
+    }
+
+    checkCustomValidator() {
+        
     }
 }
 

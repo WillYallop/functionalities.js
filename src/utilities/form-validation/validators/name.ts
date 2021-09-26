@@ -13,6 +13,9 @@ export default class NameValidator extends InputHandler {
             }
         }
 
-        this.validateHandler();
+    }
+
+    async validate() {
+        return await this.validateHandler()
     }
 }

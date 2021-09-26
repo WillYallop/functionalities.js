@@ -13,6 +13,9 @@ export default class PhoneValidator extends InputHandler {
             }
         }
 
-        this.validateHandler();
+    }
+
+    async validate() {
+        return await this.validateHandler()
     }
 }

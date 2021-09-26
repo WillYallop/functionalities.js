@@ -13,6 +13,9 @@ export default class EmailValidator extends InputHandler {
             }
         }
 
-        this.validateHandler();
+    }
+
+    async validate() {
+        return await this.validateHandler()
     }
 }

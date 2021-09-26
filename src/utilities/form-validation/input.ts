@@ -7,12 +7,54 @@ export default class InputHandler {
         this.value = this.element.value;
     }
     async validateHandler() {
+        try {
+            // Regex
+            await this.checkRegex();
+            // Min
+            await this.checkMinLength();
+            // Max
+            await this.checkMaxLength();
 
-        // Check the value matches the regex
-        console.log(this.validateConfig);
+            // Return
+            return {
+                success: true
+            }
+        }
+        catch(err) {
+            return {
+                success: false
+            }
+        }
+    }
 
-        // Check that the value is within its required length.
-        console.log(this.value);
-
+    checkRegex() {
+        return new Promise((resolve, reject) => {
+            if(this.validateConfig.regex != false) {
+                resolve(true);
+            }
+            else {
+                resolve(true);
+            }
+        });
+    }
+    checkMinLength() {
+        return new Promise((resolve, reject) => {
+            if(this.validateConfig.length.min != false) {
+                resolve(true);
+            }
+            else {
+                resolve(true);
+            }
+        });
+    }
+    checkMaxLength() {
+        return new Promise((resolve, reject) => {
+            if(this.validateConfig.length.max != false) {
+                resolve(true);
+            }
+            else {
+                resolve(true);
+            }
+        });
     }
 }

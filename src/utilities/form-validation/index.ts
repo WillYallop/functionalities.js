@@ -161,7 +161,7 @@ export default class FormValidation {
             }
         }
 
-        console.log(this.inputs);
+        // console.log(this.inputs);
 
     }
     // Verify values for non typescript implementation
@@ -186,12 +186,16 @@ export default class FormValidation {
 
 
     // External function
-    verify() {
-
-        // Loop through each entry in the inputs map
-        // Run the validator
-        // Return response
-
+    async verify() {
+        let response = [];
+        for (const [key, value] of this.inputs.entries()) {
+            // console.log(key, value);
+            response.push({
+                id: key,
+                valid: value.validator != false ? await value.validator.validate() : true
+            });
+        }
+        console.log(response);
     }
 }
 
