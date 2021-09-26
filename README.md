@@ -201,6 +201,19 @@ Refer to the config types above to see what values can be used for each config k
 
 Form/Input validation will be a simple solution to validating input fields based on a specified config. 
 
+### To Do List
+
+- [ ]  Add subgroups to validator classes. For instances: the phone validation class can contain subsets for UK, USA, mobile, landline validation.
+- [ ]  Added key up listeners to all inputs. This can be handled in the input class that is being extended. Set a cooldown to run the keyup, and each time the user types it resets this so the validationHandler isnt being fired every keypress.
+- [ ]  Make inputs have the config valid or error classes added to them on validation.
+- [ ]  Get the onVerify config callback set up.
+- [ ]  Add validators for password and password repeat - the password one should include different strengths and the password repeat must check that the password one exists first.
+- [ ]  Add validators for select - option input type.
+- [ ]  Make textarea validator also return the current and max character count so if the user wants, this can be displayed in their interface.
+- [ ]  Add support for radio and checkbox input types.
+- [ ]  Add new config option to specifiy the id of the button used to submit the form. This will be used to create a click event handler for it, which will prevent default, then run whatever logic you want that you can specify in the onSuccess callback.
+- [ ]  Final touches - add all appropriate validators.
+
 <br>
 
 ## Utility: Accordions
