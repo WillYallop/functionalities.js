@@ -12,19 +12,20 @@ export default class CustomValidator extends InputHandler {
                 min: config.length.min != undefined ? config.length.min : false,
                 max: config.length.max != undefined ? config.length.max : false
             },
-            validator: config.validator != undefined ? config.validator : false
+            validator: config.validator != undefined ? config.validator : undefined
         }
 
     }
 
     async validate() {
-        return await this.validateHandler();
+        let validateHandler = await this.validateHandler();
         // Custom validator
-        // if(this.validateConfig.validator != false) this.checkCustomValidator();
-    }
-
-    checkCustomValidator() {
-        
+        if(this.validateConfig.validator !== undefined) {
+            let passed = await this.validateConfig.validator(this.value);
+            if(passed) validateHandler.valid = true;
+            else validateHandler.valid = false, validateHandler.errors.push({ number: 99, msg: `Input with ID "${this.id}" has failed the custom validator method.` })
+        }
+        return validateHandler;
     }
 }
 

@@ -4,7 +4,6 @@ export default class AddressValidator extends InputHandler {
     validateConfig: ValidateClassConfig; 
     constructor(id: string) {
         super(id);
-
         this.validateConfig = {
             regex: new RegExp('test'),
             length: {
@@ -12,9 +11,7 @@ export default class AddressValidator extends InputHandler {
                 max: 50
             }
         }
-
     }
-
     async validate() {
         return await this.validateHandler()
     }

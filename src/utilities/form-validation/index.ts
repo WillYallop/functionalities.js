@@ -207,7 +207,6 @@ export default class FormValidation {
             // If validator is a class and not false
             if(value.validator != false) {
                 let validateResponse = await value.validator.validate();
-                console.log(validateResponse);
                 inputObj = { ...inputObj, ...validateResponse };
 
                 if(!validateResponse.valid) response.passed = false;
@@ -221,7 +220,7 @@ export default class FormValidation {
             // Push to response inputs
             response.inputs.push(inputObj);
         }
-        // console.log(response);
+        console.log(response);
     }
 }
 

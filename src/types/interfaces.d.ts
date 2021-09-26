@@ -30,7 +30,7 @@ interface ValidateClassConfig {
         min: number | false,
         max: number | false
     }
-    validator?: false | ((value:any) => boolean)
+    validator?: ((value:any) => boolean)
 }
 
 //  verify function

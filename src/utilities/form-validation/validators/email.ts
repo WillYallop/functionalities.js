@@ -4,9 +4,7 @@ export default class EmailValidator extends InputHandler {
     validateConfig: ValidateClassConfig; 
     constructor(id: string) {
         super(id);
-
         let regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
         this.validateConfig = {
             regex: new RegExp(regex),
             length: {
@@ -14,7 +12,6 @@ export default class EmailValidator extends InputHandler {
                 max: 50
             }
         }
-
     }
 
     async validate() {
