@@ -1,8 +1,10 @@
 interface CustomValidatorObj {
     methodName: string,
     regex: RegExp | false,
-    minChar: number | false,
-    maxChar: number | false,
+    length: {
+        min: number | false,
+        max: number | false
+    }
     validator?: (value:any) => boolean; 
 }
 

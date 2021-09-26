@@ -18,7 +18,17 @@ interface AdjustSlides {
 interface CustomValidatorObj {
     methodName: string,
     regex: RegExp | false,
-    minChar: number | false,
-    maxChar: number | false,
+    length: {
+        min: number | false,
+        max: number | false
+    }
     validator?: (value:any) => boolean; 
+}
+interface ValidateClassConfig {
+    regex: RegExp | false;
+    length: {
+        min: number | false,
+        max: number | false
+    }
+    validator?: false | ((value:any) => boolean)
 }
