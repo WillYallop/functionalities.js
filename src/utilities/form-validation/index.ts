@@ -31,7 +31,7 @@ interface FormValidationConfig {
     };
     customValidators?: Array<CustomValidatorObj>;
     onVerify?: (response: VerifyResponse) => void;
-    onSubmit: (response: VerifyResponse) => void;
+    onSuccess: (response: VerifyResponse) => void;
 }
 enum VerificationMethods { 
     email = 'email', 
@@ -88,6 +88,7 @@ export default class FormValidation {
     inputs: Map<string, InputObj>;
     submitBtnEle: HTMLElement;
     submitBtnEvent;
+    inputKeyupEvent;
     constructor(id: string, config: FormValidationConfig) {
         this.config = {
             onKeyup: true,
@@ -197,8 +198,8 @@ export default class FormValidation {
         if(typeof this.config.inputClasses.error != 'string') error(`Typeof "${typeof this.config.inputClasses.error }" is not allow for "inputClasses.error". It must be type "string"!`), hasError = true;
         // config.clickEvent
         if(this.config.onVerify != undefined) if(typeof this.config.onVerify != 'function') error(`Typeof "${typeof this.config.onVerify }" is not allow for "onVerify". It must be type "function"!`), hasError = true;
-        // config.onSubmit
-        if(this.config.onSubmit != undefined) if(typeof this.config.onSubmit != 'function') error(`Typeof "${typeof this.config.onSubmit }" is not allow for "onSubmit". It must be type "function"!`), hasError = true;
+        // config.onSuccess
+        if(this.config.onSuccess != undefined) if(typeof this.config.onSuccess != 'function') error(`Typeof "${typeof this.config.onSuccess }" is not allow for "onSuccess". It must be type "function"!`), hasError = true;
 
         return hasError;
     }
@@ -210,15 +211,25 @@ export default class FormValidation {
         this.submitBtnEvent = submitForm.bind(this);
         this.submitBtnEle.addEventListener('click', this.submitBtnEvent, true);
         // Add keyup events
+        if(this.config.onKeyup) {
+            // bind
+            this.inputKeyupEvent = inputKeyupEvent.bind(this);
+            // Add event listenrs
+            for (const [key, value] of this.inputs.entries()) {
+                if(value.method !== false) {
+                    value.element.addEventListener('keyup', this.inputKeyupEvent, true)
+                }
+            }
+        }
     }
 
     // External function
-    async verify() {
+    async verify(from: 'submit' | 'keyup') {
         let response: VerifyResponse = {
             passed: true,
             inputs: []
         };
-        for (const [key, value] of this.inputs.entries()) {
+        for(const [key, value] of this.inputs.entries()) {
             // Input obj
             let inputObj: VerifyResponseInputObj = {
                 id: key,
@@ -245,7 +256,9 @@ export default class FormValidation {
             response.inputs.push(inputObj);
         }
         
+        // We only let keyup fire onVerify as we dont want the onSuccess callback to fire on once you finish typing
         this.config.onVerify(response);
+        if(from === 'submit') if(response.passed) this.config.onSuccess(response);
     }
     destroy() {
 
@@ -253,8 +266,13 @@ export default class FormValidation {
 }
 
 
-// 
+// submit event
 function submitForm(e) {
     e.preventDefault();
-    this.verify();
+    this.verify('submit');
+};
+
+// keyup event
+function inputKeyupEvent(e) {
+    this.verify('keyup');
 };
