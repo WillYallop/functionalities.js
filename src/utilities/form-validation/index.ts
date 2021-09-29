@@ -8,8 +8,21 @@ interface CustomValidatorObj {
     validator?: (value:any) => boolean; 
 }
 
+interface VerifyResponse {
+    passed: boolean,
+    inputs: Array<VerifyResponseInputObj>
+}
+interface VerifyResponseInputObj {
+    id: string,
+    valid: boolean,
+    value: string,
+    uriComponentEncoded: string,
+    errors: Array<object>
+}
+
 interface FormValidationConfig {
     id?: string;
+    submitBtnId: string,
     onKeyup?: boolean;
     escapeValues?: boolean;
     inputClasses?: {
@@ -17,7 +30,8 @@ interface FormValidationConfig {
         error?: string
     };
     customValidators?: Array<CustomValidatorObj>;
-    onVerify?: () => void
+    onVerify?: (response: VerifyResponse) => void;
+    onSubmit: (response: VerifyResponse) => void;
 }
 enum VerificationMethods { 
     email = 'email', 
@@ -53,7 +67,6 @@ import NameValidator from "./validators/name";
 import LongTextValidator from "./validators/name";
 import CustomValidator from "./validators/custom";
 import PhoneValidator from "./validators/phone";
-import AddressValidator from "./validators/address";
 
 const inputTypes = [
     InputTypes.input,
@@ -73,6 +86,8 @@ export default class FormValidation {
     config: FormValidationConfig;
     formElement: HTMLElement;
     inputs: Map<string, InputObj>;
+    submitBtnEle: HTMLElement;
+    submitBtnEvent;
     constructor(id: string, config: FormValidationConfig) {
         this.config = {
             onKeyup: true,
@@ -161,14 +176,16 @@ export default class FormValidation {
             }
         }
 
-        // console.log(this.inputs);
-
+        // Add event listeners
+        this.addEventListeners();
     }
     // Verify values for non typescript implementation
     verifyConfig():boolean {
         let hasError:boolean = false;
         // config.id
         if(typeof this.config.id != 'string') error(`Typeof "${typeof this.config.id }" is not allow for "id". It must be type "string".`), hasError = true;
+        // config.submitBtnId
+        if(typeof this.config.submitBtnId != 'string') error(`Typeof "${typeof this.config.submitBtnId }" is not allow for "submitBtnId". It must be type "string".`), hasError = true;
         // config.customValidators
         if(this.config.customValidators != undefined) if(!Array.isArray(this.config.customValidators)) error(`"config.customValidators" must be an array. Refer to the documentation for more information.`), hasError = true;
         // config.onKeyup
@@ -180,10 +197,20 @@ export default class FormValidation {
         if(typeof this.config.inputClasses.error != 'string') error(`Typeof "${typeof this.config.inputClasses.error }" is not allow for "inputClasses.error". It must be type "string"!`), hasError = true;
         // config.clickEvent
         if(this.config.onVerify != undefined) if(typeof this.config.onVerify != 'function') error(`Typeof "${typeof this.config.onVerify }" is not allow for "onVerify". It must be type "function"!`), hasError = true;
+        // config.onSubmit
+        if(this.config.onSubmit != undefined) if(typeof this.config.onSubmit != 'function') error(`Typeof "${typeof this.config.onSubmit }" is not allow for "onSubmit". It must be type "function"!`), hasError = true;
 
         return hasError;
     }
 
+    // Add events 
+    addEventListeners() {
+        // Add submit evetnt
+        this.submitBtnEle = document.getElementById(this.config.submitBtnId);
+        this.submitBtnEvent = submitForm.bind(this);
+        this.submitBtnEle.addEventListener('click', this.submitBtnEvent, true);
+        // Add keyup events
+    }
 
     // External function
     async verify() {
@@ -192,7 +219,6 @@ export default class FormValidation {
             inputs: []
         };
         for (const [key, value] of this.inputs.entries()) {
-
             // Input obj
             let inputObj: VerifyResponseInputObj = {
                 id: key,
@@ -203,7 +229,6 @@ export default class FormValidation {
 
                 ]
             };
-
             // If validator is a class and not false
             if(value.validator != false) {
                 let validateResponse = await value.validator.validate();
@@ -216,17 +241,20 @@ export default class FormValidation {
                 inputObj.value = value.element.value;
                 inputObj.uriComponentEncoded = encodeURIComponent(value.element.value);
             }
-
             // Push to response inputs
             response.inputs.push(inputObj);
         }
-        console.log(response);
+        
+        this.config.onVerify(response);
+    }
+    destroy() {
+
     }
 }
 
-// TO DO
 
-// Create a map that contains all of the inputs in a form
-// Inputs will contain a required tag and then a validation tag
-// Create a base input class that can be extended depending on the type of input
-// Go through each input then then apply the checks
+// 
+function submitForm(e) {
+    e.preventDefault();
+    this.verify();
+};

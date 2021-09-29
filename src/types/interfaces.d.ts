@@ -34,14 +34,3 @@ interface ValidateClassConfig {
 }
 
 //  verify function
-interface VerifyResponse {
-    passed: boolean,
-    inputs: Array<VerifyResponseInputObj>
-}
-interface VerifyResponseInputObj {
-    id: string,
-    valid: boolean,
-    value: string,
-    uriComponentEncoded: string,
-    errors: Array<object>
-}

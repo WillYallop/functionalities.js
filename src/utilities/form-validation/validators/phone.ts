@@ -3,9 +3,8 @@ import InputHandler from "../input";
 export default class PhoneValidator extends InputHandler {
     validateConfig: ValidateClassConfig; 
     constructor(id: string, subValidator: string) {
-        
         super(id);
-
+        // Set validator based on if we have a subValidator or not
         switch(subValidator) {
             case 'uk': {
                 this.validateConfig = {
@@ -31,9 +30,6 @@ export default class PhoneValidator extends InputHandler {
     }
 
     async validate() {
-
-        console.log(this.validateConfig);
-
         return await this.validateHandler()
     }
 }
