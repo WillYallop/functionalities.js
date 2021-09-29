@@ -24,8 +24,7 @@ enum VerificationMethods {
     name = 'name',
     longText = 'longText',
     custom = 'custom',
-    phone = 'phone',
-    address = 'address'
+    phone = 'phone'
 }
 enum InputTypes {
     input = 'input',
@@ -34,7 +33,7 @@ enum InputTypes {
     checkbox = 'checkbox',
     radio = 'radio'
 }
-type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | AddressValidator | LongTextValidator | false;
+type ValidatorClasses = EmailValidator | NameValidator | CustomValidator | PhoneValidator | LongTextValidator | false;
 interface InputObj {
     method: VerificationMethods | false | string,
     element: HTMLInputElement,
@@ -67,8 +66,7 @@ const validationMethods = [
     VerificationMethods.email,
     VerificationMethods.name,
     VerificationMethods.longText,
-    VerificationMethods.phone,
-    VerificationMethods.address
+    VerificationMethods.phone
 ];
 
 export default class FormValidation {
@@ -102,10 +100,16 @@ export default class FormValidation {
             if(validElement) {
                 // If the element has no ID skip it.
                 // If the validation method is not set, we do not validate than input.
+                let eleValidator = element.getAttribute('validation-method');
+                let eleValidatorValues = {
+                    main: eleValidator != undefined ? eleValidator.split('--')[0] : false,
+                    sub: eleValidator != undefined ? eleValidator.split('--')[1] : false
+                }
+
                 if(element.id) {
                     var validationMethod: false | VerificationMethods | string;
                     var validator: ValidatorClasses;
-                    let hasMethod = validationMethods.find( x => x === element.getAttribute('validation-method'));
+                    let hasMethod = validationMethods.find( x => x === eleValidatorValues.main);
                     if(hasMethod) {
                         switch(hasMethod) {
                             case VerificationMethods.email: {
@@ -121,11 +125,7 @@ export default class FormValidation {
                                 break;
                             }
                             case VerificationMethods.phone: {
-                                validator = new PhoneValidator(element.id);
-                                break;
-                            }
-                            case VerificationMethods.address: {
-                                validator = new AddressValidator(element.id);
+                                validator = new PhoneValidator(element.id, eleValidatorValues.sub);
                                 break;
                             }
                         }
@@ -135,7 +135,7 @@ export default class FormValidation {
                         // If validation method doesnt exist in our preset validators
                         // Check if the config contains a custom one with a matching name
                         if(this.config.customValidators && this.config.customValidators.length > 0) {
-                            let hasCustomMethod = this.config.customValidators.find( x => x.methodName === element.getAttribute('validation-method'));
+                            let hasCustomMethod = this.config.customValidators.find( x => x.methodName === eleValidatorValues.main);
                             if(hasCustomMethod) {
                                 validationMethod = hasCustomMethod.methodName;
                                 validator = new CustomValidator(element.id, hasCustomMethod);
