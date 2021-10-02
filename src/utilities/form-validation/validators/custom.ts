@@ -2,9 +2,10 @@ import InputHandler from "../input";
 
 export default class CustomValidator extends InputHandler {
     validateConfig: ValidateClassConfig; 
-    constructor(id: string, config: CustomValidatorObj) {
+    inputClasses: formInputClasses;
+    constructor(id: string, config: CustomValidatorObj, inputClasses: formInputClasses) {
         super(id);
-
+        this.inputClasses = inputClasses;
         // Config
         this.validateConfig = {
             regex: config.regex != undefined ? config.regex : false,
@@ -14,7 +15,6 @@ export default class CustomValidator extends InputHandler {
             },
             validator: config.validator != undefined ? config.validator : undefined
         }
-
     }
 
     async validate() {

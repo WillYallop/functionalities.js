@@ -34,3 +34,7 @@ interface ValidateClassConfig {
 }
 
 //  verify function
+interface formInputClasses {
+    valid?: string,
+    error?: string
+}

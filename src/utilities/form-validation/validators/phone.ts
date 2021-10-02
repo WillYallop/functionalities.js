@@ -2,8 +2,10 @@ import InputHandler from "../input";
 
 export default class PhoneValidator extends InputHandler {
     validateConfig: ValidateClassConfig; 
-    constructor(id: string, subValidator: string) {
+    inputClasses: formInputClasses;
+    constructor(id: string, subValidator: string, inputClasses: formInputClasses) {
         super(id);
+        this.inputClasses = inputClasses;
         // Set validator based on if we have a subValidator or not
         switch(subValidator) {
             case 'uk': {

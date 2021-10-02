@@ -3,6 +3,7 @@ export default class InputHandler {
     element: HTMLInputElement;
     value: string;
     validateConfig: ValidateClassConfig;
+    inputClasses: formInputClasses;
     constructor(id: string) {
         this.id = id;
         this.element = document.getElementById(id) as HTMLInputElement;
@@ -20,6 +21,16 @@ export default class InputHandler {
         if(!checkRegexRes.passed) valid = false, errors.push(checkRegexRes.error);
         if(!checkMinLengthRes.passed) valid = false, errors.push(checkMinLengthRes.error);
         if(!checkMaxLengthRes.passed) valid = false, errors.push(checkMaxLengthRes.error);
+
+        // Valid
+        if(valid) {
+            this.element.classList.add(this.inputClasses.valid);
+            if (this.element.classList.contains(this.inputClasses.error)) this.element.classList.remove(this.inputClasses.error)
+        }
+        else {
+            this.element.classList.add(this.inputClasses.error);
+            if (this.element.classList.contains(this.inputClasses.valid)) this.element.classList.remove(this.inputClasses.error);
+        }
 
         // Return
         return {

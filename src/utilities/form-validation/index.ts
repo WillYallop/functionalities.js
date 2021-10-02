@@ -129,19 +129,19 @@ export default class FormValidation {
                     if(hasMethod) {
                         switch(hasMethod) {
                             case VerificationMethods.email: {
-                                validator = new EmailValidator(element.id);
+                                validator = new EmailValidator(element.id, this.config.inputClasses);
                                 break;
                             }
                             case VerificationMethods.name: {
-                                validator = new NameValidator(element.id);
+                                validator = new NameValidator(element.id, this.config.inputClasses);
                                 break;
                             }
                             case VerificationMethods.longText: {
-                                validator = new LongTextValidator(element.id);
+                                validator = new LongTextValidator(element.id, this.config.inputClasses);
                                 break;
                             }
                             case VerificationMethods.phone: {
-                                validator = new PhoneValidator(element.id, eleValidatorValues.sub);
+                                validator = new PhoneValidator(element.id, eleValidatorValues.sub, this.config.inputClasses);
                                 break;
                             }
                         }
@@ -154,7 +154,7 @@ export default class FormValidation {
                             let hasCustomMethod = this.config.customValidators.find( x => x.methodName === eleValidatorValues.main);
                             if(hasCustomMethod) {
                                 validationMethod = hasCustomMethod.methodName;
-                                validator = new CustomValidator(element.id, hasCustomMethod);
+                                validator = new CustomValidator(element.id, hasCustomMethod, this.config.inputClasses);
                             }
                             else {
                                 validationMethod = false;
